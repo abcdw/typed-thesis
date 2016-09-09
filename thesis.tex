@@ -1,0 +1,52 @@
+\documentclass[dvips,letterpaper,12pt]{report}
+\usepackage{thesis}
+
+\begin{document}
+
+\pagenumbering{roman}
+
+% Fill in the title, author, degree name, department, and month/year.
+% Upon completion, this should look like the following:
+%\thesistitle
+%	{Complicated and Important-Sounding Thesis Title}
+%	{John P. Doe}
+%	{Master of Science}
+%	{Department of Computer Science}
+%	{May 2009}
+% The \thesistitle definition is in thesis.sty.  Other customizations
+% can be made there.
+\thesistitle
+	{Metathesis: \\
+	 A \LaTeX\ template to Typeset Your Thesis for \\
+	 Submission to the School of Graduate Studies  \\
+	 \footnotesize{\sl (Changed the title by modifying the file
+	  \texttt{thesis.tex})}}
+	{\emph{my-name} (change this in \texttt{thesis.tex})}
+	{Master of \emph{faculty} \textbf{or} Doctor of Philosophy
+	 (change this in \texttt{thesis.tex})}
+	{Department of \emph{dept-name}
+	 (change this in \texttt{thesis.tex})}
+	{\emph{Month Year} (change this in \texttt{thesis.tex}, too)}
+
+\include{abstract}
+\include{ack}
+\include{contents}
+\include{tables}
+\include{figures}
+
+\pagenumbering{arabic}
+\include{chap1}
+\include{chap2}
+\include{chap3}
+\include{chap4}
+\include{chap5}
+\include{chap6}
+
+\include{bib}
+
+% If you have no appendices, remove the following two lines.
+% If you have more appdences, add them as necessary.
+\appendix
+\include{apdxa}
+
+\end{document}
