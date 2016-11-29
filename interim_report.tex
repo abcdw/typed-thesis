@@ -1,4 +1,4 @@
-\documentclass{report}
+\documentclass[12pt,a4paper]{report}
 
 %\usepackage[tmargin=2cm, bmargin=2.5cm]{geometry}
 \usepackage{titlesec}
@@ -12,7 +12,8 @@
 \else
 \usepackage[pdftex]{graphicx}
 \fi
-% \usepackage{columbidaeTitle}
+\usepackage{indentfirst}
+\usepackage{hyperref}
 
 \sectionfont{\centering}
 
@@ -29,7 +30,9 @@
     Alternatives of static type system and it's application for Clojure programming language
     \par}
 	\vspace{2cm}
-	{\Large\itshape Andrew Tropin\par}
+	{\Large\itshape Andrew Tropin\\
+    andrewtropin@gmail.com
+    \par}
 	\vfill
 	supervised by\par
 	Manuel Mazzara, Alexander Chichigin
@@ -42,8 +45,32 @@
 
 \section*{Goals of the Project}
 
-The main goal of the project to create tool, which compensates lack of static
-type system for clojure programming language. \\
+The main goal of the project is to create tool, which partially compensates lack
+of static type system for clojure programming language. Most of following ideas
+can be applied for all functional languages with dynamic type system.\\
+
+More precisely:
+\begin{itemize}
+\item Documentation, provided by type annotations
+\item Ability to catch errors earlier and closer to problem location
+\item Refactoring with greater confidence
+\end{itemize}
+
+There are also some issues, which static type system helps to solve, but they are not
+addressed in this work:
+\begin{itemize}
+\item Faster resulting programs
+  (see \href{https://www.youtube.com/watch?v=yGko70hIEwk&t=295s}{related work})
+\end{itemize}
+
 Overview of the report
+
+\section*{System Specification}
+
+\section*{Background theory}
+\section*{Task specification and project schedule}
+\section*{Review of tasks}
+\section*{Interim results}
+\section*{Short term plans}
 
 \end{document}
