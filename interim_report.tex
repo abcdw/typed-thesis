@@ -167,9 +167,48 @@ Most valuable thoughts of papers and articles below are conducted and presented 
 sections of this report.
 
 \section*{Task specification and project schedule}
-\section*{Review of tasks}
-\section*{Interim results}
-\section*{Short term plans}
+This project uses agile results methodology. \\
+
+Project milestones, first part of each milestone is developing, second is
+writing documentation and reports: \\
+\begin{itemize}
+\item Include specs in doc strings(Dec-Jan)
+\item Generate samples for tests using specs(Feb)
+\item Provide simplest sample data for failed test(Mar-Apr)
+\end{itemize}
+
+More information about current tasks and milestones can be found on \href{https://github.com/abcdw/typed-thesis/projects/1}{https://github.com/abcdw/typed-thesis}
+
+% \section*{Review of tasks}
+
+
+\section*{Interim results and short-term plans}
+
+Project ideas inspired by experience of developing REST API service(urbest), using
+test/repl driven development and researches about language type systems
+\cite{coldwar} - \cite{statictypingadv}. After few months of development
+it became obvious that \textbf{clojure} projects have to have good test
+coverage, but many test cases are simple and can be generated from description
+of the shape of data, also it will be very helpful to have additional
+information about types of arguments in docstring. That's why few specifications
+was added to urbest project to help understand some parts of codebase and to
+make it easier to validate passed parameters and add post- and pre-conditions
+and write test.\\
+
+First of all was created tool, which helps to update docstrings for
+current repl session, using existing annotations. At the moment tool, which add
+information about parameters and result type to
+docstring is just few functions in one of the namespaces of the urbest project.
+Nearest plans is to make a separate library and move all functionality connected
+with docstring generation to it.\\
+
+
+
+
+
+% \section*{Short term plans}
+
+
 \begin{thebibliography}{9}
 \bibitem{coldwar}
   Static Typing Where Possible, Dynamic Typing When Needed: The End of the Cold
