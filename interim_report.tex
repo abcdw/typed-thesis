@@ -83,6 +83,74 @@ and tests.
 
 \section*{System Specification}
 
+There are already many projects using custom annotations for their needs. For
+example \textbf{prismatic.schema}, \textbf{herbert}, \textbf{core.typed} and so
+on. Main problem is that tools are not supported by language developers, some
+of them force to change code drastically and sometimes doesn't follow clojure
+way. Solution is to use annotations which supported by core library of the
+language, it's guarantied to be in any distribution of compiler and follow
+language coans.
+
+In next major release of \textbf{Clojure}(1.9) will be introduced tool called
+\textbf{clojure.spec} as a part of language core. It is domain specific
+language, which allows to write composition of predicates to describe shape and
+type of data. Another features of specs is data coersion, detailed explanation
+of predicate violation and generating of sample data conforming a particular
+spec. Some examples are illustrated below. \\
+
+\begin{minted}{clojure}
+(def nillable-string?
+  (s/or :name string? :nil nil?))
+
+(s/def ::email
+  (s/and
+   string?
+   #(re-matches #"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}" %)))
+
+(s/def ::new-user
+  (s/merge (s/map-of #{:password :full_name :email :phone} nillable-string?)
+           (s/keys :req-un [::email] :opt-un [::password ::full_name ::phone])))
+\end{minted}
+
+Tool is based on \textbf{clojure.spec} and allows to generate docstrings for current
+repl session, using existing annotations. \\
+
+Another feature of \textbf{clojure.spec} is ability to generate sample data from
+specs:
+
+\begin{minted}{clojure}
+(s/def ::kws (s/with-gen (s/and keyword? #(= (namespace %) "my.domain"))
+               #(s/gen #{:my.domain/name :my.domain/occupation :my.domain/id})))
+(s/valid? ::kws :my.domain/name)  ;; true
+(gen/sample (s/gen ::kws))
+;;=> (:my.domain/occupation :my.domain/occupation :my.domain/name  ...)
+
+(s/def ::roll (s/int-in 0 11))
+(gen/sample (s/gen ::roll))
+;;=> (1 0 0 3 1 7 10 1 5 0)
+\end{minted}
+
+Using this feature tool can generate tests for annotated functions. If function
+failing test and result doesn't conform provided spec, it's easy to get
+explanation such that:
+
+\begin{minted}{clojure}
+(s/explain-data ::name-or-id :foo)
+;;=> #:clojure.spec{
+;;     :problems ({:path [:name],
+;;                 :pred string?,
+;;                 :val :foo,
+;;                 :via [:spec.examples.guide/name-or-id],
+;;                 :in []}
+;;                {:path [:id],
+;;                 :pred int?,
+;;                 :val :foo,
+;;                 :via [:spec.examples.guide/name-or-id],
+;;                 :in []})}
+\end{minted}
+
+Docstring generation and automatic test generation is two main goals of the tool.
+
 \section*{Background theory}
 \section*{Task specification and project schedule}
 \section*{Review of tasks}
