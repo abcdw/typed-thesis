@@ -1,29 +1,43 @@
-\documentclass[dvips,letterpaper,12pt]{report}
+\documentclass[a4paper,14pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+% \usepackage[dvips]{graphicx}
+\usepackage[pdftex]{graphicx}
+\usepackage{geometry}
+\geometry{left=25mm}
+\geometry{right=20mm}
+\geometry{top=20mm}
+\geometry{bottom=20mm}
+\graphicspath{{figures/}}
+\usepackage[usenames]{color}
+\usepackage{colortbl}
+\usepackage{multirow}
+% \usepackage{setspace}
+% \onehalfspacing
+
 \usepackage{thesis}
+\usepackage{minted}
 
 \begin{document}
 
 \pagenumbering{roman}
 
+
 % Fill in the title, author, degree name, department, and month/year.
 % Upon completion, this should look like the following:
-%\thesistitle
-%	{Complicated and Important-Sounding Thesis Title}
-%	{John P. Doe}
-%	{Master of Science}
-%	{Department of Computer Science}
-%	{May 2009}
 % The \thesistitle definition is in thesis.sty.  Other customizations
 % can be made there.
-\thesistitle
-	{Thesis: \\
-	 Alternatives of static type system and it's application for Clojure
-programming language.\\
-	 Submission to the School of Graduate Studies  \\}
-	{\emph{Andrew Tropin}}
-	{Bachelor of \emph{Science}}
-	{Department of \emph{Computer Science}}
-	{\emph{Month Year}}
+% \thesistitle
+% 	{Thesis: \\
+% 	 Alternatives of static type system and it's application for Clojure
+% programming language.\\
+% 	 Submission to the School of Graduate Studies  \\}
+% 	{\emph{Andrew Tropin}}
+% 	{Bachelor of \emph{Science}}
+% 	{Department of \emph{Computer Science}}
+% 	{\emph{Month Year}}
+
+\include{title}
 
 \include{abstract}
 \include{ack}
