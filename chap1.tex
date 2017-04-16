@@ -1,24 +1,56 @@
 \chapter{Introduction}
 \label{chap:intro}
 
-Your introduction has two main purposes: 1) to give an overview of the main points of your thesis; and 2) awaken the reader’s interest. It’s not a bad idea to go through the introduction one last time when the writing is done, to ensure that it connects well with your conclusion.
-
 \section{Overview}
-The background sets the general tone for your thesis. It should make a good impression and convince the reader why the theme is important and your approach relevant. Even so, it should be no longer than necessary.
 
-What is considered a relevant background depends on your field and its traditions. Background information might be historical in nature, or it might refer to previous research or practical considerations. You can also focus on a specific text, thinker or problem.
+There are two main approaches of type checking: static and dynamic. Advocates of
+first approach say that benefits of static type checking include earlier
+detection of bugs and mistakes (e.g. preventing adding string to an integer),
+inline documentation and additional data for advanced code competition, useful
+information for compiler, which helps to make optimizations (e.g. replacing
+virtual calls by direct calls, when type of the caller are known), improved
+runtime efficiency (e.g. not necessary to do dynamic dispatching).
 
-Academic writing often means having a discussion with yourself (or some imagined opponent). To open your discussion, there are several options available. You may, for example:
+On the other hand, there are also advocates of dynamic type checking who states
+that languages with such approach have following advantages: interactive dynamic
+development (e.g. REPL driven development + TDD, where tests can be rerun
+without recompilation of the whole project), fast prototyping (e.g. type
+decisions can be postponed, language are much more expressive and more suitable
+for development of systems with rapidly changing or unknown requirements).
 
-refer to a contemporary event
-outline a specific problem; a case study or an example
-review the relevant research/literature to demonstrate the need for this particular type of research
-If it is common in your discipline to reflect upon your experiences as a practitioner, this is the place to present them. In the remainder of your thesis, this kind of information should be avoided, particularly if it has not been collected systematically.
+Static type checking is a good tool, but it necessary to understand that it
+doesn't guarantee programs to be bug-free and correct because it provides
+compile-time abstraction over run-time behavior of the software system this
+means that some errors can be caught, but execution of the program can still go
+wrong. Moreover static typing force to make decisions earlier, slowdown
+compilation and make interactive development nearly impossible.
 
-Tip: Do not spend too much time on your background and opening remarks before you have gotten started with the main text.
+Nowadays many people/teams/companies interested in making data-intensive
+systems, just take a look at current trends: data-driven approaches, BigData,
+machine learning becomes more and more popular. The reason is clear: huge amount
+of data allows to extract useful knowledge, but we need some tools to do it.
+Probably dynamism is one of the most important thing for such kind of software
+systems because majority of data is not fully structured, according to research
+project report of Berkeley University \ref{lymanmuch} around 95\%. In cases when
+structure is known up front after few steps people or algorithms generates
+queries based on run-time information and data also gets dynamic nature.
 
-a) “set the scene” with a (short) narrative
-c) take an example from the media to give your topic current relevance.
+Dynamic type checking is a good tool for data-intensive or other kind of dynamic
+systems, but it also necessary to understand that it has some trade-offs. It is
+much harder to refactor, develop and maintain systems with such type checking
+because any even small change can break the system and nobody will know it until
+fault will occur later in run-time. There are some techniques, which helps to
+deal with it like Test-driven development \ref{beck2003test} or Contract-driven
+development \ref{meyer2007contract}, but they doesn't solve all the problems.
+Sometimes it is pretty handy to define shape of the date up front to check if
+current data conform the specification or to generate data samples from such
+specifications.
+
+Information about when and what type checking better to use can be found in
+\cite{meijer2004static}, it states that use static typing where possible and
+dynamic when needed, but what if there is no possibility to choose type checking
+system and it is necessary to use dynamically typed language? Can benefits of
+static type checking be achieved in such environment?
 
 
 \section{Goals of the project}
@@ -33,6 +65,7 @@ How do you know that you have drafted a research question? Most importantly, a r
 
 Some tips:
 
+% I will hire someone, who will explain problems of this thesis
 Use interrogative words: how, why, which (factors/situations) etc.
 Some questions are closed and only invoke concrete/limited answers. Others will open up for discussions and different interpretations.
 Asking “What …?” is a more closed question than asking “How?” or “In what way?”
