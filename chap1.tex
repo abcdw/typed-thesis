@@ -53,25 +53,24 @@ system and it is necessary to use dynamically typed language? Can benefits of
 static type checking be achieved in such environment?
 
 
-\section{Goals of the project}
+\section{Contributions}
+In this thesis introduced few ways to get in dynamically typed language
+alternatives of benefits, which provides static type checking. As a basis
+\textbf{Clojure} programming language was taken, but most of the work should be
+suitable for languages, which have same properties described in
+\ref{chap:tools}.
 
-One of the first tasks of a researcher is defining the scope of a study, i.e., its area (theme, field) and the amount of information to be included. Narrowing the scope of your thesis can be time-consuming. Paradoxically, the more you limit the scope, the more interesting it becomes. This is because a narrower scope lets you clarify the problem and study it at greater depth, whereas very broad research questions only allow a superficial treatment.
+Initially, described benefits of static type checking and which of them are more
+in demand. After that explained ideas, which help to get similar benefits in
+dynamically typed language. Also, some of the existing tools and approaches,
+which implements this ideas are covered.
 
-The research question can be formulated as one main question with (a few) more specific sub-questions or in the form of a hypothesis that will be tested.
-
-Your research question will be your guide as your writing proceeds. If you are working independently, you are also free to modify it as you go along.
-
-How do you know that you have drafted a research question? Most importantly, a research question is something that can be answered. If not, you have probably come up with a theme or field, not a question.
-
-Some tips:
-
-% I will hire someone, who will explain problems of this thesis
-Use interrogative words: how, why, which (factors/situations) etc.
-Some questions are closed and only invoke concrete/limited answers. Others will open up for discussions and different interpretations.
-Asking “What …?” is a more closed question than asking “How?” or “In what way?”
-Asking “Why” means you are investigating what causes of a phenomenon. Studying causality is methodologically demanding.
-Feel free to pose partially open questions that allow discussions of the overall theme, e.g., “In what way …?”; “How can we understand [a particular phenomenon]?”
-Try to condense your research question into one general question – and perhaps a few more specific sub-questions (two or three will usually suffice).
+On top of that, the prototype of the tool, which helps to automate the process
+of generating tests and enriching documentation string in run-time is introduced
+as a big part of contribution of this thesis. This tool provides an interface
+(functions), which allows to modify meta-data of functions in run-time
+namespace-wide or project-wide and another interface (macros), which allows to
+generate test for annotated function in a single namespace.
 
 \section{Outline}
 The outline gives an overview of the main points of your thesis. It clarifies the structure of your thesis and helps you find the correct focus for your work. The outline can also be used in supervision sessions, especially in the beginning. You might find that you need to restructure your thesis. Working on your outline can then be a good way of making sense of the necessary changes. A good outline shows how the different parts relate to each other, and is a useful guide for the reader.
