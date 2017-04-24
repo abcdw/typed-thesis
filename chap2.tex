@@ -73,13 +73,13 @@ motivations for liveness in programming:
 
 \begin{itemize}
 \item Minimizing the latency between a programming action and seeing its effect
-  on program execution.
+  on program execution
 \item Allowing performances in which programmer actions control the dynamics of
-  the audience experience in real time.
+  the audience experience in real time
 \item Simplifying the “credit assignment problem” faced by a programmer when
-  some programming actions induce a new runtime behavior (such as a bug).
+  some programming actions induce a new runtime behavior (such as a bug)
 \item Supporting learning (hence the early connections between liveness with
-  visual programming and program visualization).
+  visual programming and program visualization)
 \end{itemize}
 
 The traditional program development cycle involved the four separate phases:
@@ -132,6 +132,14 @@ design of a programming language is the result of multiple tradeoffs that
 achieve certain desirable properties, let's formulate what tradeoffs static type
 checking has.
 
+Clojure is a hosted language this means that it is not very strictly related to
+concrete platform and can be compiled in different languages (javascript for
+example) or vms bytecode (java virtual machine bytecode, common language runtime
+bytecode). Cause of so much compilation/translation options are exists, it will
+be very hard to talk about performance optimizations related to static typing,
+that is why performance questions are not addressed in this work, but the impact
+of optional type information on jit compilation of dynamically typed languages
+are presented in \cite{chang2011impact}.
 
 \subsection{Advantages}
 First of all, a large class of errors are caught, earlier in the development
@@ -236,22 +244,6 @@ choices, and you may have to make these choices at a point in time where you’r
 unsure how to decide, or when the choice feels distracting.
 
 \section{Optional annotations}
-What can be done prismatic.schema, clojure.spec
-
-\subsection{prismatic.schema}
-
-One of the difficulties with bringing Clojure into a team is the overhead of understanding the kind of data (e.g., list of strings, nested map from long to string to double) that a function expects and returns. While a full-blown type system is one solution to this problem, we present a lighter weight solution: schemas. (For more details on why we built Schema, check out this post.)
-
-Schema is a rich language for describing data shapes, with a variety of features:
-
-Data validation, with descriptive error messages of failures (targeted at programmers)
-Annotation of function arguments and return values, with optional runtime validation
-Schema-driven data coercion, which can automatically, succinctly, and safely convert complex data types (see the Coercion section below)
-Schema also supports experimental clojure.test.check data generation from Schemas, as well as completion of partial datums, features we've found very useful when writing tests. ** As of 1.1.0, this functionality can be found in the separate schema-generators library. **
-Schema is also built into our plumbing and fnhouse libraries, which illustrate how we build services and APIs easily and safely with Schema.
-
-\subsection{clojure.spec}
-Docs are not enough
 
 Clojure is a dynamic language. Among other things this means that type
 annotations are not required for code to run. While Clojure has some support for
@@ -272,8 +264,6 @@ can’t be leveraged by programs or tests, i.e. they have minimal power. Users
 have turned to various libraries such as Schema and Herbert to get more powerful
 specifications.
 
-Map specs should be of keysets only
-
 Most systems for specifying structures conflate the specification of the key set
 (e.g. of keys in a map, fields in an object) with the specification of the
 values designated by those keys. I.e. in such approaches the schema for a map
@@ -288,18 +278,14 @@ the same semantic for the same key wherever it is used. Defining specifications
 of every subset/union/intersection, and then redundantly stating the semantic of
 each key is both an antipattern and unworkable in the most dynamic cases.
 
-Manual parsing and error reporting is not good enough
-
 Many users, especially beginners, are frustrated and challenged by the error
 messages produced by hand-written parsing and destructuring code, especially in
 macros where there are two contexts of execution (the macro runs at compile time
 and its expansion at runtime, either of which could fail due to user error).
 This has led to a call for 'macro grammars', but in fact macros are just
-functions of data $\rightarrow$ data and any solution for data validation and destructuring
-should work as well for them as for any other functions. I.e. macros are an
-instance of the problems above.
-
-Generative testing and robustness
+functions of data $\rightarrow$ data and any solution for data validation and
+destructuring should work as well for them as for any other functions. I.e.
+macros are an instance of the problems above.
 
 Finally, in all languages, dynamic or not, tests are essential to quality. Too
 many critical properties are not captured by common type systems. But manual
@@ -307,347 +293,484 @@ testing has a very low effectiveness/effort ratio. Property-based, generative
 testing, as implemented for Clojure in test.check, has proved to be far more
 powerful than manually written tests.
 
-Yet property based testing requires the definition of properties, which require
-extra effort and expertise to produce, and which, at the function-level, have
-substantial overlap with function specifications. Many interesting properties at
-the function level would already be captured by structural+predicative specs.
-Ideally, specs should integrate with generative testing and provide certain
-categories of generative tests 'for free'.
-
 A standard approach is needed. In short, Clojure has no standard, expressive,
-powerful and integrated system for specification and testing. clojure.spec aims
-to provide it.
+powerful and integrated system for specification and testing. prismatic.schema,
+clojure.spec are solutions for most of the problems mentioned above. They have
+some advantages and disadvantages discussed below.
 
-Objectives
+\subsection{prismatic.schema}
 
-Communication
+One of the difficulties with bringing Clojure into a team is the overhead of
+understanding the kind of data (e.g., list of strings, nested map from long to
+string to double) that a function expects and returns. While a full-blown type
+system is one solution to this problem, there are also lighter weight solution:
+prismatic.schema.
 
-Species - appearance, form, sort, kind, equivalent to spec (ere) to look, regard
-               + -is bstract noun suffix
+Schema is a rich language for describing data shapes, with a variety of features:
+\begin{itemize}
+\item Data validation, with descriptive error messages of failures (targeted at
+  programmers)
+\item Annotation of function arguments and return values, with optional runtime
+  validation Schema-driven data coercion, which can automatically, succinctly,
+  and safely convert complex data types (see the Coercion section below)
+\item Schema also supports experimental clojure.test.check data generation from
+  Schemas, as well as completion of partial datums, features we've found very
+  useful when writing tests
+\item Schema is also built into plumbing and fnhouse libraries, which illustrate
+  how we build services and APIs easily and safely with Schema
+\end{itemize}
 
-Specify - species + -ficus -fic (make)
-A specification is about how something 'looks', but is, most importantly, something that is looked at. Specs should be readable, composed of 'words' (predicate functions) programmers are already using, and integrated in documentation.
+Examples below explains most features of prismatic.schema.
 
-Unify specification in its various contexts
+\begin{minted}{clojure}
+(ns schema-examples
+  (:require [schema.core :as s
+             :include-macros true ;; cljs only
+             ]))
 
-Specs for data structures, attribute values and functions should all be the same and live in a globally-namespaced directory.
+(def Data
+  "A schema for a nested data type"
+  {:a {:b s/Str
+       :c s/Int}
+   :d [{:e s/Keyword
+        :f [s/Num]}]})
 
-Maximize leverage from specification effort
+(s/validate
+  Data
+  {:a {:b "abc"
+       :c 123}
+   :d [{:e :bc
+        :f [12.2 13 100]}
+       {:e :bc
+        :f [-1]}]})
+;; Success!
+
+(s/validate
+  Data
+  {:a {:b 123
+       :c "ABC"}})
+;; Exception -- Value does not match schema:
+;;  {:a {:b (not (instance? java.lang.String 123)),
+;;       :c (not (integer? "ABC"))},
+;;   :d missing-required-key}
+\end{minted}
+
+\begin{minted}{clojure}
+;; s/Any, s/Bool, s/Num, s/Keyword, s/Symbol, s/Int, and s/Str are cross-platform schemas.
+
+(s/validate s/Num 42)
+;; 42
+(s/validate s/Num "42")
+;; RuntimeException: Value does not match schema: (not (instance java.lang.Number "42"))
+
+(s/validate s/Keyword :whoa)
+;; :whoa
+(s/validate s/Keyword 123)
+;; RuntimeException: Value does not match schema: (not (keyword? 123))
+
+;; On the JVM, you can use classes for instance? checks
+(s/validate java.lang.String "schema")
+
+;; On JS, you can use prototype functions
+(s/validate Element (js/document.getElementById "some-div-id"))
+\end{minted}
+
+
+\subsection{clojure.spec}
+
+% Docs are not enough
+% Map specs should be of keysets only
+% Manual parsing and error reporting is not good enough
+% Generative testing and robustness
+
+Clojure.spec has all features mentioned below, but has some advantages over the
+prismatic.schema, because it will became a part of clojure in next release of
+the language (1.9), it developed by core team that means that it has more
+clojure way decisions and more tightly integrated with other parts of the
+language, moreover it probably will be standard of optional annotations for
+Clojure in the future. It is a most suitable candidate for implementation
+alternatives of static type checking advantages, that is why let's look at what
+can be done with clojure.spec and how to use it. Small glossary provided below:
+
+
+% Yet property based testing requires the definition of properties, which require
+% extra effort and expertise to produce, and which, at the function-level, have
+% substantial overlap with function specifications. Many interesting properties at
+% the function level would already be captured by structural+predicative specs.
+% Ideally, specs should integrate with generative testing and provide certain
+% categories of generative tests 'for free'.
+
+\begin{itemize}
+\item Conform. Conform is the basic operation for consuming specs, and does both
+  validation and conforming/destructuring. Note that conforming is 'deep' and
+  flows through all of the spec and regex operations, map specs etc. Since nil
+  and false are legitimate conformed values, conform returns the distinguished
+  \texttt{:clojure.spec/invalid} when a value cannot be made to conform. valid?
+  can be used instead as a fully-boolean predicate.
+
+\item Explain. When a value fails to conform to a spec you can call explain or
+  explain-data with the same spec+value to find out why. These explanations are
+  not produced during conform because they might perform additional work and
+  there is no reason to incur that cost for non-failing inputs or when no report
+  is desired. An important component of explanations is the path. explain
+  extends the path as it navigates through e.g. nested maps or regex patterns,
+  so you get better information than just the entire or leaf value. explain-data
+  will return a map of paths to problems.
+
+\item Path. Due to the fact that all branching points in specs are labeled, i.e.
+  map keys, choices in or and alt, and (possibly elided) elements of cat, every
+  subexpression in a spec can be referred to via a path (vector of keys) naming
+  the parts. These paths are used in explain, gen overrides and various error
+  reporting.
+
+\item Spec. A specification is about how something 'looks', but is, most
+  importantly, something that is looked at. Specs should be readable, composed
+  of 'words' (predicate functions) programmers are already using, and integrated
+  in documentation. Unify specification in its various contexts Specs for data
+  structures, attribute values and functions should all be the same and live in
+  a globally-namespaced directory. Maximize leverage from specification effort.
+
+\end{itemize}
 
 Writing a spec should enable automatic:
 
-Validation
-Error reporting
-Destructuring
-Instrumentation
-Test-data generation
-Generative test generation
-Minimize intrusion
+\begin{itemize}
+\item Validation
+\item Error reporting
+\item Destructuring
+\item Instrumentation
+\item Test-data generation
+\item Generative test generation
+\item Minimize intrusion
+\end{itemize}
 
-Don’t require that people e.g. define their functions differently. Minor modifications to doc and macroexpand will allow independently written specs to adorn fn/macro behavior without redefinition.
+Minor modifications to doc and macroexpand will allow independently written
+specs to adorn fn/macro behavior without redefinition.
 
-Decomplect maps/keys/values
+Keep map (keyset) specs separate from attribute (key$\rightarrow$value) specs.
+Encourage and support attribute-granularity specs of namespaced keyword to
+value-spec. Combining keys into sets (to specify maps) becomes orthogonal, and
+checking becomes possible in the fully-dynamic case, i.e. even when no map spec
+is present, attributes (key-values) can be checked.
 
-Keep map (keyset) specs separate from attribute (key$\rightarrow$value) specs. Encourage and support attribute-granularity specs of namespaced keyword to value-spec. Combining keys into sets (to specify maps) becomes orthogonal, and checking becomes possible in the fully-dynamic case, i.e. even when no map spec is present, attributes (key-values) can be checked.
+Programmers suffer greatly when they redefine things while keeping the names the
+same. Yet some changes are compatible and some are breaking, and most tools
+can’t distinguish. Use constructs like set membership and regular expressions
+for which compatibility can be determined, and provide tools for compatibility
+checking (while leaving general predicate equality out of scope).
 
-Enable and start a dialog about semantic change and compatibility
+There is no reason to limit our specifications to what we can prove, yet that is
+primarily what type systems do. There is so much more we want to communicate and
+verify about our systems. This goes beyond structural/representational types and
+tagging to predicates that e.g. narrow domains or detail relationships between
+inputs or between inputs and output. Additionally, the properties we care most
+about are often those of the runtime values, not some static notion. Thus spec
+is not a type system, but static type checking using clojure.spec partially
+implemented by spectrum library.
 
-Programmers suffer greatly when they redefine things while keeping the names the same. Yet some changes are compatible and some are breaking, and most tools can’t distinguish. Use constructs like set membership and regular expressions for which compatibility can be determined, and provide tools for compatibility checking (while leaving general predicate equality out of scope).
 
-Guidelines
+All programs use names, even when the type systems don’t, and they capture
+important semantics. Int x Int y Int z just isn’t good enough (is it
+length/width/height or height/width/depth?). So spec will not have unlabeled
+sequence components or untagged union bindings. The utility of this becomes
+evident when spec needs to talk to users about specs, e.g. in error reporting,
+and vice versa, e.g. when users want to override generators in specs. When all
+branches are named, you can talk about parts of specs using paths.
 
-Mistakes will be made
+Clojure supports namespaced keywords and symbols. Note here we are just talking
+about namespace-qualified names, not Clojure namespace objects. These are
+tragically underutilized and convey important benefits because they can always
+co-reside in dictionaries/dbs/maps/sets without conflict. spec will allow (only)
+namespace-qualified keywords and symbols to name specs. People using namespaced
+keys for their informational maps (a practice we’d like to see grow) can
+register the specs for those attributes directly under those names. This
+categorically changes the self-description of maps, particularly in dynamic
+contexts, and encourages composition and consistency.
 
-We don’t (and couldn’t) live in a world where we can’t make mistakes. Instead, we periodically check that we haven’t. Amazon doesn’t send you your TV via a UPS<Trucks<Boxes<TV>>>. So occasionally you might get a microwave, but the supply chain isn’t burdened with correctness proof. Instead we check at the edges and run tests.
+In Lisps (and thus Clojure), code is data. But data is not code until you define
+a language around it. Many DSLs in this space drive at a data representation for
+schemas, but predicative specs have an open and large vocabulary, and most of
+the useful predicates already exist and are well known as functions in the core
+and other namespaces, or can be written as simple expressions. Having to
+'datafy', possibly renaming, all of these predicates adds little value, and has
+a definite cost in understanding precise semantics. spec instead leverages the
+fact that the original predicates and expressions are data in the first place
+and captures that data for use in communicating with the users in documentation
+and error reporting. Yes, this means that more of the surface area of
+clojure.spec will be macros, but specs are overwhelmingly written by people and,
+when composed, manually so.
 
-expressivity > proof
+As per above, maps defining the details of the values at their keys is a
+fundamental complecting of concerns that will not be supported. Map specs detail
+required/optional keys (i.e. set membership things) and keyword/attr/value
+semantics are independent. Map checking is two-phase, required key presence then
+key/value conformance. The latter can be done even when the
+(namespace-qualified) keys present at runtime are not in the map spec. This is
+vital for composition and dynamicity.
 
-There is no reason to limit our specifications to what we can prove, yet that is primarily what type systems do. There is so much more we want to communicate and verify about our systems. This goes beyond structural/representational types and tagging to predicates that e.g. narrow domains or detail relationships between inputs or between inputs and output. Additionally, the properties we care most about are often those of the runtime values, not some static notion. Thus spec is not a type system.
 
-Names are important
+Invariably, people will try to use a specification system to detail
+implementation decisions, but they do so to their detriment. The best and most
+useful specs (and interfaces) are related to purely information aspects. Only
+information specs work over wires and across systems. We will always prioritize,
+and where there is a conflict, prefer, the information approach.
 
-All programs use names, even when the type systems don’t, and they capture important semantics. Int x Int x Int just isn’t good enough (is it length/width/height or height/width/depth?). So spec will not have unlabeled sequence components or untagged union bindings. The utility of this becomes evident when spec needs to talk to users about specs, e.g. in error reporting, and vice versa, e.g. when users want to override generators in specs. When all branches are named, you can talk about parts of specs using paths.
+There are very few bottom notions in this space and we will endeavor to stick to
+them. There are few distinct structural notions - a handful of atomic types,
+sequential things, sets and maps. Unsurprisingly, these are the Clojure data
+types and fundamental ops will be provided only for these. Similarly there are
+mathematical tools for talking about these - set logic for maps and regular
+expressions for sequences - that have valuable properties. We will prefer these
+over ad hoc solutions.
 
-Global (namespaced) names are more important
-
-Clojure supports namespaced keywords and symbols. Note here we are just talking about namespace-qualified names, not Clojure namespace objects. These are tragically underutilized and convey important benefits because they can always co-reside in dictionaries/dbs/maps/sets without conflict. spec will allow (only) namespace-qualified keywords and symbols to name specs. People using namespaced keys for their informational maps (a practice we’d like to see grow) can register the specs for those attributes directly under those names. This categorically changes the self-description of maps, particularly in dynamic contexts, and encourages composition and consistency.
-
-Don’t further add to/overload the (reified) namespaces of Clojure
-
-Nothing will be attached to vars, metadata etc. All functions have namespaced names which can serve as keys to their related data (e.g. spec) that is stored elsewhere.
-
-Code is data (not vice versa)
-
-In Lisps (and thus Clojure), code is data. But data is not code until you define a language around it. Many DSLs in this space drive at a data representation for schemas. But predicative specs have an open and large vocabulary, and most of the useful predicates already exist and are well known as functions in the core and other namespaces, or can be written as simple expressions. Having to 'datafy', possibly renaming, all of these predicates adds little value, and has a definite cost in understanding precise semantics. spec instead leverages the fact that the original predicates and expressions are data in the first place and captures that data for use in communicating with the users in documentation and error reporting. Yes, this means that more of the surface area of clojure.spec will be macros, but specs are overwhelmingly written by people and, when composed, manually so.
-
-Sets (maps) are about membership, that’s it
-
-As per above, maps defining the details of the values at their keys is a fundamental complecting of concerns that will not be supported. Map specs detail required/optional keys (i.e. set membership things) and keyword/attr/value semantics are independent. Map checking is two-phase, required key presence then key/value conformance. The latter can be done even when the (namespace-qualified) keys present at runtime are not in the map spec. This is vital for composition and dynamicity.
-
-Informational vs implementational
-
-Invariably, people will try to use a specification system to detail implementation decisions, but they do so to their detriment. The best and most useful specs (and interfaces) are related to purely information aspects. Only information specs work over wires and across systems. We will always prioritize, and where there is a conflict, prefer, the information approach.
-
-K.I.S.S.
-
-There are very few bottom notions in this space and we will endeavor to stick to them. There are few distinct structural notions - a handful of atomic types, sequential things, sets and maps. Unsurprisingly, these are the Clojure data types and fundamental ops will be provided only for these. Similarly there are mathematical tools for talking about these - set logic for maps and regular expressions for sequences - that have valuable properties. We will prefer these over ad hoc solutions.
-
-Build on test.check but don’t require knowledge of it
-
-The generative testing underpinning of spec will leverage test.check and not reinvent it. But spec users should not need to know anything about test.check until and unless they want to write their own generators or supplement spec's generated tests with further property-based tests of their own. There should be no production runtime dependency on test.check.
-
-Features
-
-Overview
-
-Predicative specs
+The generative testing underpinning of spec will leverage test.check and not
+reinvent it. But spec users should not need to know anything about test.check
+until and unless they want to write their own generators or supplement spec's
+generated tests with further property-based tests of their own. There should be
+no production runtime dependency on test.check.
 
 The basic idea is that specs are nothing more than a logical composition of
 predicates. At the bottom we are talking about the simple boolean predicates you
-are used to like int? or symbol?, or expressions you build yourself like $\#(<
-42 \% 66)$. spec adds logical ops like spec/and and spec/or which combine specs in a logical way and offer deep reporting, generation and conform support and, in the case of spec/or, tagged returns.
+are used to like int? or symbol?, or expressions you build yourself like \texttt{\#(<
+42 \% 66)}. Spec adds logical ops like spec/and and spec/or which combine specs
+in a logical way and offer deep reporting, generation and conform support and,
+in the case of spec/or, tagged returns.
 
-Maps
+Specs for map keysets provide for the specification of required and optional key
+sets. A spec for a map is produced by calling keys with \texttt{:req} and
+\texttt{:opt} keyword arguments mapping to vectors of key names. \texttt{:req}
+keys support the logical operators and and or.
 
-Specs for map keysets provide for the specification of required and optional key sets. A spec for a map is produced by calling keys with :req and :opt keyword arguments mapping to vectors of key names.
-
-:req keys support the logical operators and and or.
-
+\begin{minted}{clojure}
 (spec/keys :req [::x ::y (or ::secret (and ::user ::pwd))] :opt [::z])
-One of the most visible differences between spec and other systems is that there is no place in that map spec for specifying the values e.g. ::x can take. It is the (enforced) opinion of spec that the specification of values associated with a namespaced keyword, like :my.ns/k, should be registered under that keyword itself, and applied in any map in which that keyword appears. There are a number of advantages to this:
+\end{minted}
 
-It ensures consistency for all uses of that keyword in an application where all uses should share a semantic
-It similarly ensures consistency between a library and its consumers
-It reduces redundancy, since otherwise many map specs would need to make matching declarations about k
-Namespaced keyword specs can be checked even when no map spec declares those keys
-This last point is vital when dynamically building up, composing, or generating maps. Creating a spec for every map subset/union/intersection is unworkable. It also facilitates fail-fast detection of bad data - when it is introduced vs when it is consumed.
+One of the most visible differences between spec and other systems is that there
+is no place in that map spec for specifying the values e.g. \texttt{::x} can
+take. It is the (enforced) opinion of spec that the specification of values
+associated with a namespaced keyword, like \texttt{:my.ns/k}, should be
+registered under that keyword itself, and applied in any map in which that
+keyword appears. There are a number of advantages to this:
 
-Of course, many existing map-based interfaces take non-namespaced keys. To support connecting them to properly namespaced and reusable specs, keys supports -un variants of :req and :opt
+\begin{itemize}
+\item It ensures consistency for all uses of that keyword in an application where all
+  uses should share a semantic
 
+\item It similarly ensures consistency between a library
+  and its consumers
+
+\item It reduces redundancy, since otherwise many map specs would need to make
+  matching declarations about k Namespaced keyword specs can be checked even
+  when no map spec declares those keys
+
+\end{itemize}
+
+This last point is vital when dynamically building up, composing, or generating
+maps. Creating a spec for every map subset/union/intersection is unworkable. It
+also facilitates fail-fast detection of bad data - when it is introduced vs when
+it is consumed.
+
+Of course, many existing map-based interfaces take non-namespaced keys. To
+support connecting them to properly namespaced and reusable specs, keys supports
+-un variants of \texttt{:req} and \texttt{:opt}.
+
+\begin{minted}{clojure}
 (spec/keys :req-un [:my.ns/a :my.ns/b])
-This specs a map that requires the unqualified keys :a and :b but validates and generates them using specs (when defined) named :my.ns/a and :my.ns/b respectively. Note that this cannot convey the same power to unqualified keywords as have namespaced keywords - the resulting maps are not self-describing.
+\end{minted}
 
-Sequences
+This specs a map that requires the unqualified keys \texttt{:a} and \texttt{:b}
+but validates and generates them using specs (when defined) named
+\texttt{:my.ns/a} and \texttt{:my.ns/b} respectively. Note that this cannot
+convey the same power to unqualified keywords as have namespaced keywords - the
+resulting maps are not self-describing.
 
-Specs for sequences/vectors use a set of standard regular expression operators, with the standard semantics of regular expressions:
+Specs for sequences/vectors use a set of standard regular expression operators,
+with the standard semantics of regular expressions:
 
-cat - a concatenation of predicates/patterns
-alt - a choice of one among a set of predicates/patterns
-* - zero or more occurrences of a predicate/pattern
-+ - one or more
-? - one or none
-\& - takes a regex op and further constrains it with one or more predicates
-These nest arbitrarily to form complex expressions.
+\begin{itemize}
+\item cat - a concatenation of predicates/patterns
+\item alt - a choice of one among a set of predicates/patterns
+\item * - zero or more occurrences of a predicate/pattern
+\item + - one or more
+\item ? - one or none
+\item \& - takes a regex op and further constrains it with one or more predicates
+\end{itemize}
 
-Note that cat and alt require all of their components be labeled, and the return value of each is a map with the keys corresponding to the matched components. In this way spec regexes act as destructuring and parsing tools.
+These nest arbitrarily to form complex expressions. Note that cat and alt
+require all of their components be labeled, and the return value of each is a
+map with the keys corresponding to the matched components. In this way spec
+regexes act as destructuring and parsing tools.
 
-% user=> (require '[clojure.spec :as s])
-% (s/def ::even? (s/and integer? even?))
-% (s/def ::odd? (s/and integer? odd?))
-% (s/def ::a integer?)
-% (s/def ::b integer?)
-% (s/def ::c integer?)
-% (def s (s/cat :forty-two #{42}
-%               :odds (s/+ ::odd?)
-%               :m (s/keys :req-un [::a ::b ::c])
-%               :oes (s/* (s/cat :o ::odd? :e ::even?))
-%               :ex (s/alt :odd ::odd? :even ::even?)))
-% user=> (s/conform s [42 11 13 15 {:a 1 :b 2 :c 3} 1 2 3 42 43 44 11])
-% {:forty-two 42,
-%  :odds [11 13 15],
-%  :m {:a 1, :b 2, :c 3},
-%  :oes [{:o 1, :e 2} {:o 3, :e 42} {:o 43, :e 44}],
-%  :ex {:odd 11}}
-conform/explain
+\begin{minted}{clojure}
+user=> (require [clojure.spec :as s])
+(s/def ::even? (s/and integer? even?))
+(s/def ::odd? (s/and integer? odd?))
+(s/def ::a integer?)
+(s/def ::b integer?)
+(s/def ::c integer?)
+(def s (s/cat :forty-two #{42}
+              :odds (s/+ ::odd?)
+              :m (s/keys :req-un [::a ::b ::c])
+              :oes (s/* (s/cat :o ::odd? :e ::even?))
+              :ex (s/alt :odd ::odd? :even ::even?)))
+user=> (s/conform s [42 11 13 15 {:a 1 :b 2 :c 3} 1 2 3 42 43 44 11])
+{:forty-two 42,
+ :odds [11 13 15],
+ :m {:a 1, :b 2, :c 3},
+ :oes [{:o 1, :e 2} {:o 3, :e 42} {:o 43, :e 44}],
+ :ex {:odd 11}}
+\end{minted}
 
-As you can see above, the basic operation for using specs is conform, which takes a spec and a value and returns the conformed value or :clojure.spec/invalid if the value did not conform. When the value does not conform you can call explain or explain-data to find out why it didn’t.
+As you can see above, the basic operation for using specs is conform, which
+takes a spec and a value and returns the conformed value or
+\texttt{:clojure.spec/invalid} if the value did not conform. When the value does
+not conform you can call explain or explain-data to find out why it didn’t.
 
-Defining specs
+The primary operations for defining specs are s/def, s/and, s/or, s/keys and the
+regex ops. There is a spec function that can take a predicate function or
+expression, a set, or a regex op, and can also take an optional generator which
+would override the generator implied by the predicate(s).
 
-The primary operations for defining specs are s/def, s/and, s/or, s/keys and the regex ops. There is a spec function that can take a predicate function or expression, a set, or a regex op, and can also take an optional generator which would override the generator implied by the predicate(s).
+Note however, that def, and, or, keys spec fns and the regex ops can all take
+and use predicate functions and sets directly - and do not need them to be
+wrapped by spec. spec should only be needed when you want to override a
+generator or to specify that a nested regex starts a new, vs being included in
+the same pattern.
 
-Note however, that def, and, or, keys spec fns and the regex ops can all take and use predicate functions and sets directly - and do not need them to be wrapped by spec. spec should only be needed when you want to override a generator or to specify that a nested regex starts anew, vs being included in the same pattern.
+In order for a spec to be reusable by name, it has to be registered via def. def
+takes a namespace-qualified keyword/symbol and a spec/predicate expression. By
+convention, specs for data should be registered under keywords and attribute
+values should be registered under their attribute name keyword. Once registered,
+the name can be used anywhere a spec/predicate is called for in any of the spec
+operations.
 
-Data spec registration
-
-In order for a spec to be reusable by name, it has to be registered via def. def takes a namespace-qualified keyword/symbol and a spec/predicate expression. By convention, specs for data should be registered under keywords and attribute values should be registered under their attribute name keyword. Once registered, the name can be used anywhere a spec/predicate is called for in any of the spec operations.
-
-Function spec registration
-
-A function can be fully specified via three specs - one for the args, one for the return, and one for the operation of the function relating the args to the return.
-
-The args spec for a fn is always going to be a regex that specs the arguments as if they were a list, i.e. the list one would pass to apply the function. In this way, a single spec can handle functions with multiple arities.
-
+A function can be fully specified via three specs - one for the args, one for
+the return, and one for the operation of the function relating the args to the
+return. The args spec for a fn is always going to be a regex that specs the
+arguments as if they were a list, i.e. the list one would pass to apply the
+function. In this way, a single spec can handle functions with multiple arities.
 The return spec is an arbitrary spec of a single value.
 
-The (optional) fn spec is a further specification of the relationship between the arguments and the return, i.e. the function of the function. It will be passed (e.g. during testing) a map containing {:args conformed-args :ret conformed-ret} and will generally contain predicates that relate those values - e.g. it could ensure that all keys of an input map are present in the returned map.
+The (optional) fn spec is a further specification of the relationship between
+the arguments and the return, i.e. the function of the function. It will be
+passed (e.g. during testing) a map containing\newline
+\mintinline{clojure}{{:args conformed-args :ret conformed-ret}} and will
+generally contain predicates that relate those values - e.g. it could ensure
+that all keys of an input map are present in the returned map. You can fully
+specify all three specs of a function in a single call to fdef, and recall the
+specs via fn-specs.
 
-You can fully specify all three specs of a function in a single call to fdef, and recall the specs via fn-specs.
+Functions specs defined via fdef will appear when you call doc on the fn name.
+You can call describe on specs to get descriptions as forms.
 
-Using specs
+You can use conform directly in your implementations to get its
+destructuring/parsing/error-checking. conform can be used e.g. in macro
+implementations and at I/O boundaries.
 
-Documentation
+You can selectively instrument functions and namespaces with instrument, which
+swaps out the fn var with a wrapped version of the fn that tests the
+\texttt{:args} spec. unstrument returns a fn to its original version. You can
+generate data for interactive testing with gen/sample.
 
-Functions specs defined via fdef will appear when you call doc on the fn name. You can call describe on specs to get descriptions as forms.
+You can run a suite of spec-generative tests on an entire ns with check. You can
+get a test.check compatible generator for a spec by calling gen. There are
+built-in associations between many of the clojure.core data predicates and
+corresponding generators, and the composite ops of spec know how to build
+generators atop those. If you call gen on a spec and it is unable to construct a
+generator for some subtree, it will throw an exception that describes where. You
+can pass generator-returning fns to spec in order to supply generators for
+things spec does not know about, and you can pass an override map to gen in
+order to supply alternative generators for one or more subpaths of a spec.
 
-Parsing/destructuring
+In addition to the destructuring use cases above, you can make calls to conform
+or valid? anywhere you want runtime checking, and can make lighter-weight
+internal-only specs for tests you intend to run in production.
 
-You can use conform directly in your implementations to get its destructuring/parsing/error-checking. conform can be used e.g. in macro implementations and at I/O boundaries.
-
-During development
-
-You can selectively instrument functions and namespaces with instrument, which swaps out the fn var with a wrapped version of the fn that tests the :args spec. unstrument returns a fn to its original version. You can generate data for interactive testing with gen/sample.
-
-For testing
-
-You can run a suite of spec-generative tests on an entire ns with check. You can get a test.check compatible generator for a spec by calling gen. There are built-in associations between many of the clojure.core data predicates and corresponding generators, and the composite ops of spec know how to build generators atop those. If you call gen on a spec and it is unable to construct a generator for some subtree, it will throw an exception that describes where. You can pass generator-returning fns to spec in order to supply generators for things spec does not know about, and you can pass an override map to gen in order to supply alternative generators for one or more subpaths of a spec.
-
-At runtime
-
-In addition to the destructuring use cases above, you can make calls to conform or valid? anywhere you want runtime checking, and can make lighter-weight internal-only specs for tests you intend to run in production.
-
-Please see the spec Guide and API docs for more examples and usage information.
-
-Glossary
-
-predicates
-
-Many parts of the spec API call for 'predicates' or 'preds'. These arguments can be satisfied by:
-
-predicate (boolean) fns
-sets
-registered names of specs
-specs (the return values of spec, and, or, keys)
-regex ops (the return values of cat, alt, *, +, ?, \&)
-Note that if you want to nest an independent regex predicate within a regex you will have to wrap it in a call to spec, else it will be considered a nested pattern.
-
-specs
-
-The return values of spec, and, or and keys.
-
-regex ops
-
-The return values of cat, alt, *, +, ?, \&. When nested these form a single expression.
-
-conform
-
-conform is the basic operation for consuming specs, and does both validation and conforming/destructuring. Note that conforming is 'deep' and flows through all of the spec and regex operations, map specs etc. Since nil and false are legitimate conformed values, conform returns the distinguished :clojure.spec/invalid when a value cannot be made to conform. valid? can be used instead as a fully-boolean predicate.
-
-explain
-
-When a value fails to conform to a spec you can call explain or explain-data with the same spec+value to find out why. These explanations are not produced during conform because they might perform additional work and there is no reason to incur that cost for non-failing inputs or when no report is desired. An important component of explanations is the path. explain extends the path as it navigates through e.g. nested maps or regex patterns, so you get better information than just the entire or leaf value. explain-data will return a map of paths to problems.
-
-paths
-
-Due to the fact that all branching points in specs are labeled, i.e. map keys, choices in or and alt, and (possibly elided) elements of cat, every subexpression in a spec can be referred to via a path (vector of keys) naming the parts. These paths are used in explain, gen overrides and various error reporting.
-
-Prior Art
-
-Almost nothing about spec is novel. See all the libraries mentioned above, RDF, as well as all the work done on various contract systems, such as Racket’s contracts.
-
-I hope you find spec useful and powerful.
-
-Rich Hickey
-
-Better Communication
-
-Clojure is a dynamic language, and thus far we have relied on documentation or external libraries to explain the use and behavior of functions and libraries. But documentation is difficult to produce, is frequently not maintained, cannot be automatically checked and varies greatly in quality. Specs are expressive and precise. Including spec in Clojure creates a lingua franca with which we can state how our programs work and how to use them.
-
-More Leverage and Power
-
-A key advantage of specifications over documentation is the leverage they provide. In particular, specs can be utilized by programs in ways that docs cannot. Defining specs takes effort, and spec aims to maximize the return you get from making that effort. spec gives you tools for leveraging specs in documentation, validation, error reporting, destructuring, instrumentation, test-data generation and generative testing.
-
-Improved Developer Experience
-
-Error messages from macros are a perennial challenge for new (and experienced) users of Clojure. Specs can be used to conform data in macros instead of using a custom parser. And Clojure’s macro expansion will automatically use specs, when present, to explain errors to users. This should result in a greatly improved experience for users when errors occur.
-
-More Robust Software
-
-Clojure has always been about simplifying the development of robust software. In all languages, dynamic or not, tests are essential to quality - too many critical properties are not captured by common type systems. spec has been designed from the ground up to directly support generative testing via test.check. When you use spec you get generative tests for free.
-
-Taken together, I think the features of spec demonstrate the ongoing advantages of a powerful dynamic language like Clojure for building robust software - superior expressivity, instrumentation-enhanced REPL-driven development, sophisticated testing and more flexible systems. I encourage you to read the spec rationale and overview. Look for spec’s inclusion in the next alpha release of Clojure, within a day or so.
+Note that if you want to nest an independent regex predicate within a regex you
+will have to wrap it in a call to spec, else it will be considered a nested
+pattern.
 
 
 
-\section{Gradual typing}
-\subsection{TypedClojure}
-TypedClojure, pros and cons
-\cite{bonnaire2016practical}
+
+
+\section{Gradual typing [DRAFT]}
 The popularity of dynamically-typed languages in software development, combined
-with a recognition that types often improve programmer productivity,
-software reliability, and performance, has led to the recent development of a wide
+with a recognition that types often improve programmer productivity, software
+reliability, and performance, has led to the recent development of a wide
 variety of optional and gradual type systems aimed at checking existing programs
-written in existing languages. These include TypeScript [19] and Flow [11] for
-JavaScript, Hack [10] for PHP, and mypy [15] for Python among the optional
-systems, and Typed Racket [23], Reticulated Python [25], and GradualTalk [1]
-among gradually-typed systems.1
+written in existing languages. These include TypeScript and Flow for JavaScript,
+Hack for PHP, and mypy for Python among the optional systems, and Typed Racket,
+Reticulated Python, and GradualTalk among gradually-typed systems.
 
+\subsection{TypedClojure}
+Something about typedclojure \cite{bonnaire2016practical}.
 
-One key lesson of these systems, indeed a lesson known to early developers of
-optional type systems such as StrongTalk, is that type systems for existing
-languages must be designed to work with the features and idioms of the target
-language. Often this takes the form of a core language, be it of functions or
-classes and objects, together with extensions to handle distinctive language
-features. We synthesize these lessons to present Typed Clojure, an optional type
-system for Clojure. Clojure is a dynamically typed language in the Lisp
-family—built on the Java Virtual Machine (JVM)—which has recently gained
-popularity as an alternative JVM language. It offers the flexibility of a Lisp
-dialect, including macros, emphasizes a functional style via immutable data
-structures, and provides interoperability with existing Java code, allowing
-programmers to use existing Java libraries without leaving Clojure. Since its
-initial release in 2007, Clojure has been widely adopted for “backend”
-development in places where its support for parallelism, functional programming,
-and Lisp-influenced abstraction is desired on the JVM. As a result, there is an
-extensive base of existing untyped programs whose developers can benefit from
-Typed Clojure, an experience we discuss in this paper. Since Clojure is a
-language in the Lisp family, we apply the lessons of Typed Racket, an existing
-gradual type system for Racket, to the core of Typed Clojure, consisting of an
-extended lambda-calculus over a variety of base types shared between all Lisp
-systems. Furthermore, Typed Racket’s occurrence typing has proved necessary for
-type checking realistic Clojure programs. However, Clojure goes beyond Racket in
-many ways, requiring several new type system features which we detail in this
-paper. Most significantly, Clojure supports, and Clojure developers use,
-multimethods to structure their code in extensible fashion. Furthermore, since
-Clojure is an untyped language, dispatch within multimethods is determined by
-application of dynamic predicates to argument values. Fortunately, the dynamic
-dispatch used by multimethods has surprising symmetry with the conditional
-dispatch handled by occurrence typing. Typed Clojure is therefore able to
-effectively handle complex and highly dynamic dispatch as present in existing
-Clojure programs. But multimethods are not the only Clojure feature crucial to
-type checking existing programs. As a language built on the Java Virtual
-Machine, Clojure provides flexible and transparent access to existing Java
-libraries, and Clojure/Java interoperation is found in almost every significant
-Clojure code base. Typed Clojure therefore builds in an understanding of the
-Java type system and handles interoperation appropriately. Notably, null is a
-distinct type in Typed Clojure, designed to automatically rule out null-pointer
-exceptions. An example of these features is given in Figure 1. Here, the pname
-multimethod dispatches on the class of the argument—for Strings, the first
-method implementation is called, for Files, the second. The String method calls
-a File constructor, returning a non-nil File instance—the getName method on File
-requires a non-nil target, returning a nilable type. Finally, flexible,
-high-performance immutable dictionaries are the most common Clojure data
-structure. Simply treating them as uniformly-typed key-value mappings would be
-insufficient for existing programs and programming styles. Instead, Typed
-Clojure provides a flexible heterogenous map type, in which specific entries can
-be specified. While these features may seem disparate, they are unified in
-important ways. First, they leverage the type system mechanisms inherited from
-Typed Racket— multimethods when using dispatch via predicates, Java
-interoperation for handling null tests, and heterogenous maps using union types
-and reasoning about subcomponents of data. Second, they are crucial features for
-handling Clojure code in practice. Typed Clojure’s use in real Clojure
-deployments would not be possible without effective handling of these three
-Clojure features. Our main contributions are as follows: 1. We motivate and
-describe Typed Clojure, an optional type system for Clojure that understands
-existing Clojure idioms. 2. We present a sound formal model for three crucial
-type system features: multi-methods, Java interoperability, and heterogenous
-maps. 3. We evaluate the use of Typed Clojure features on existing Typed Clojure
-code, including both open source and in-house systems. The remainder of this
-paper begins with an example-driven presentation of the main type system
-features in Section 2. We then incrementally present a core calculus for Typed
-Clojure covering all of these features together in Section 3 and prove type
-soundness (Section 4). We then present an empirical analysis of significant code
-bases written in core.typed—the full implementation of Typed Clojure—in Section
-5. Finally, we discuss related work and conclude.
+% One key lesson of these systems, indeed a lesson known to early developers of
+% optional type systems such as StrongTalk, is that type systems for existing
+% languages must be designed to work with the features and idioms of the target
+% language. Often this takes the form of a core language, be it of functions or
+% classes and objects, together with extensions to handle distinctive language
+% features. We synthesize these lessons to present Typed Clojure, an optional type
+% system for Clojure. Clojure is a dynamically typed language in the Lisp
+% family—built on the Java Virtual Machine (JVM)—which has recently gained
+% popularity as an alternative JVM language. It offers the flexibility of a Lisp
+% dialect, including macros, emphasizes a functional style via immutable data
+% structures, and provides interoperability with existing Java code, allowing
+% programmers to use existing Java libraries without leaving Clojure. Since its
+% initial release in 2007, Clojure has been widely adopted for “backend”
+% development in places where its support for parallelism, functional programming,
+% and Lisp-influenced abstraction is desired on the JVM. As a result, there is an
+% extensive base of existing untyped programs whose developers can benefit from
+% Typed Clojure, an experience we discuss in this paper. Since Clojure is a
+% language in the Lisp family, we apply the lessons of Typed Racket, an existing
+% gradual type system for Racket, to the core of Typed Clojure, consisting of an
+% extended lambda-calculus over a variety of base types shared between all Lisp
+% systems. Furthermore, Typed Racket’s occurrence typing has proved necessary for
+% type checking realistic Clojure programs. However, Clojure goes beyond Racket in
+% many ways, requiring several new type system features which we detail in this
+% paper. Most significantly, Clojure supports, and Clojure developers use,
+% multimethods to structure their code in extensible fashion. Furthermore, since
+% Clojure is an untyped language, dispatch within multimethods is determined by
+% application of dynamic predicates to argument values. Fortunately, the dynamic
+% dispatch used by multimethods has surprising symmetry with the conditional
+% dispatch handled by occurrence typing. Typed Clojure is therefore able to
+% effectively handle complex and highly dynamic dispatch as present in existing
+% Clojure programs. But multimethods are not the only Clojure feature crucial to
+% type checking existing programs. As a language built on the Java Virtual
+% Machine, Clojure provides flexible and transparent access to existing Java
+% libraries, and Clojure/Java interoperation is found in almost every significant
+% Clojure code base. Typed Clojure therefore builds in an understanding of the
+% Java type system and handles interoperation appropriately. Notably, null is a
+% distinct type in Typed Clojure, designed to automatically rule out null-pointer
+% exceptions. An example of these features is given in Figure 1. Here, the pname
+% multimethod dispatches on the class of the argument—for Strings, the first
+% method implementation is called, for Files, the second. The String method calls
+% a File constructor, returning a non-nil File instance—the getName method on File
+% requires a non-nil target, returning a nilable type. Finally, flexible,
+% high-performance immutable dictionaries are the most common Clojure data
+% structure. Simply treating them as uniformly-typed key-value mappings would be
+% insufficient for existing programs and programming styles. Instead, Typed
+% Clojure provides a flexible heterogenous map type, in which specific entries can
+% be specified. While these features may seem disparate, they are unified in
+% important ways. First, they leverage the type system mechanisms inherited from
+% Typed Racket— multimethods when using dispatch via predicates, Java
+% interoperation for handling null tests, and heterogenous maps using union types
+% and reasoning about subcomponents of data. Second, they are crucial features for
+% handling Clojure code in practice. Typed Clojure’s use in real Clojure
+% deployments would not be possible without effective handling of these three
+% Clojure features. Our main contributions are as follows: 1. We motivate and
+% describe Typed Clojure, an optional type system for Clojure that understands
+% existing Clojure idioms. 2. We present a sound formal model for three crucial
+% type system features: multi-methods, Java interoperability, and heterogenous
+% maps. 3. We evaluate the use of Typed Clojure features on existing Typed Clojure
+% code, including both open source and in-house systems. The remainder of this
+% paper begins with an example-driven presentation of the main type system
+% features in Section 2. We then incrementally present a core calculus for Typed
+% Clojure covering all of these features together in Section 3 and prove type
+% soundness (Section 4). We then present an empirical analysis of significant code
+% bases written in core.typed—the full implementation of Typed Clojure—in Section
+% 5. Finally, we discuss related work and conclude.
 
 \subsection{Spectrum}
 Introducing Spectrum (github.com/arohner/spectrum), a static “typing”
