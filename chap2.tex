@@ -4,22 +4,23 @@
 \section{Clojure}
 
 Clojure is a dynamic language for the Java Virtual Machine, with a compelling
-combination of features: Clojure is elegant. Clojure's clean, careful design
-lets you write programs that get right to the essence of a problem, without a
-lot of clutter and ceremony. Clojure is Lisp reloaded. Clojure has the power
-inherent in Lisp, but is not constrained by the history of Lisp. Clojure is a
-functional language. Data structures are immutable, and functions tend to be
-side-effect free. This makes it easier to write correct programs, and to compose
-large programs from smaller ones. Clojure is concurrent. Rather than error-prone
-locking, Clojure provides software transactional memory. Clojure embraces Java.
-Calling from Clojure to Java is direct, and goes through no translation layer.
-Clojure is fast. Wherever you need it, you can get the exact same performance
-that you could get from hand-written Java code. Many other languages offer some
-of these features, but the combination of them all makes Clojure sparkle.
+combination of features: it is elegant, clean, careful design lets you write
+programs that get right to the essence of a problem, without a lot of clutter
+and ceremony. Clojure is Lisp reloaded, it has the power inherent from Lisp, but
+is not constrained by the history of Lisp. It is a functional language, where
+data structures are immutable, and functions tend to be side-effect free. This
+makes it easier to write correct programs, and to compose large programs from
+smaller ones. Language designed for concurrency, rather than error-prone
+locking, it provides software transactional memory. It has good Java
+interopability functionality. Calling from Clojure to Java is direct, and goes
+through no translation layer. It is fast. Wherever you need it, you can get
+the exact same performance that you could get from hand-written Java code. Many
+other languages offer some of these features, but the combination of them all
+makes Clojure sparkle.
 
-For me first of all it is enjoyable, but if we talk about some boring enterprise
-things: customers and stakeholders have substantial investments in and are
-already comfortable with the performance, security and stability of
+As for me first of all it is enjoyable, but if we talk about some boring
+enterprise things: customers and stakeholders have substantial investments in
+and are already comfortable with the performance, security and stability of
 industry-standard platforms like the JVM. While Java developers may envy the
 succinctness, flexibility and productivity of dynamic languages, they have
 concerns about running on customer-approved infrastructure, access to their
@@ -71,13 +72,13 @@ offers for immediate feedback can be very valuable. Here are some of the
 motivations for liveness in programming:
 
 \begin{itemize}
-\item minimizing the latency between a programming action and seeing its effect
+\item Minimizing the latency between a programming action and seeing its effect
   on program execution.
-\item allowing performances in which programmer actions control the dynamics of
+\item Allowing performances in which programmer actions control the dynamics of
   the audience experience in real time.
-\item simplifying the “credit assignment problem” faced by a programmer when
+\item Simplifying the “credit assignment problem” faced by a programmer when
   some programming actions induce a new runtime behavior (such as a bug).
-\item supporting learning (hence the early connections between liveness with
+\item Supporting learning (hence the early connections between liveness with
   visual programming and program visualization).
 \end{itemize}
 
@@ -98,9 +99,9 @@ and the execution of the program might be distracting, particularly when the
 program is in an intermediate state between useful versions with meaningful
 behavior.
 
-In modern integrated development environments such as Eclipse for Java
-programming, there are many features that work as the programmer codes, to
-provide feedback to the programmer. These include syntax highlighting, code
+In modern integrated development environments such as Emacs for Lisp or Eclipse
+for Java programming, there are many features that work as the programmer codes,
+to provide feedback to the programmer. These include syntax highlighting, code
 completion suggestions, and indications of problems associated with various
 locations in a source file. Facilities for editing running code also exist. The
 Java virtual machine from version 1.4 has included a “hot-swap” feature that
@@ -121,50 +122,58 @@ necessary to keep in mind this workflows when think about possible solutions.
 
 
 \section{Static type checking}
-It is necessary to understand what advantages and disadvantages static type
-checking has. First of all to understand what benefits can be taken and secondly
-what can be and should be avoided. This also
+It is necessary to clarify what advantages and disadvantages static type
+checking has, first of all, to understand what benefits can be taken and
+secondly what can be and should be avoided \cite{staticvsdynamic}. This also
+important to not break existing workflows and keep feedback cycle very short. A
+comparative study of programming languages \cite{nanz2015comparative} tells us
+about what languages a most suitable for. From an engineering viewpoint, the
+design of a programming language is the result of multiple tradeoffs that
+achieve certain desirable properties, let's formulate what tradeoffs static type
+checking has.
 
 
 \subsection{Advantages}
-A large class of errors are caught, earlier in the development process, closer
-to the location where they are introduced. Example: you have a map whose keys
-are strings and whose values you expect (elsewhere in your program) to be
-functions from Int -> Int, and you accidentally insert a function that returns a
-list of integers. Oops! With static typing, this error would be caught by the
-typechecker and pointed out to the programmer at the location the erroneous
-value is inserted. In a dynamic language, the error could go unnoticed until
-much later, when that value gets pulled out of the map and the function applied.
-As another example of this sort of thing, many languages have a concept of null
-(the ‘billion dollar mistake’). Even static languages like Java allow null to be
-used in place of any type, which leads to a situations where unexpected null
-values pop up in your program very far from the place where they were
-erroneously introduced.
+First of all, a large class of errors are caught, earlier in the development
+process, closer to the location where they are introduced, but it doesn't mean
+that the code cannot be broken. \textbf{Example}: you have a map whose keys are
+strings and whose values you expect (elsewhere in your program) to be functions
+from Int -> Int, and you accidentally insert a function that returns a list of
+integers. With static typing, this error would be caught by the typechecker and
+pointed out to the programmer at the location the erroneous value is inserted.
+In a dynamic language, the error could go unnoticed until much later, when that
+value gets pulled out of the map and the function applied. As another example of
+this sort of thing, many languages have a concept of null (the ‘billion dollar
+mistake’). Even static languages like Java allow null to be used in place of any
+type, which leads to a situations where unexpected null values pop up in your
+program very far from the place where they were erroneously introduced. Such
+problems mostly solved in programming languages like Kotlin.
 
-The types guide development and can even write code for you—the programmer ends
-up with less to specify. Example: Haskell has a feature called typeclasses,
-which derives aspects of your program, purely based on the types, which are
-often inferred. The resulting code can be noticeably shorter than dynamic
-languages which cannot disambiguate programmer intent via types. More advanced
-dependently typed languages routinely derive large amounts of boring code with
-guidance from the programmer and the types specified. Conor McBride likes to
-emphasize that types are not merely about preventing errors—they are about
-declaring more of your intent to the machine so the machine can do more work on
-your behalf.
+The types guide development and can even write code for you, the programmer ends
+up with less to specify. \textbf{Example}: Haskell has a
+feature called typeclasses, which derives aspects of your program, purely based
+on the types, which are often inferred. The resulting code can be noticeably
+shorter than dynamic languages which cannot disambiguate programmer intent via
+types. More advanced dependently typed languages routinely derive large amounts
+of boring code with guidance from the programmer and the types specified. Conor
+McBride likes to emphasize that types are not merely about preventing
+errors, they are about declaring more of your intent to the machine so the
+machine can do more work on your behalf.
 
 One can refactor with greater confidence, since a large class of errors
-introduced during refactoring will end up as type errors. Example: you have a
-function that currently returns a single number, and wish to modify it to return
-a list of numbers. In a static language, updating the declared type signature
-and fixing any compile errors will catch most, if not all places that need
-updating.
+introduced during refactoring will end up as type errors. Some techniques
+discussed earlier (TDD, RDD) also gives same or similar benefits.
+\textbf{Example}: you have a function that currently returns a single number,
+and wish to modify it to return a list of numbers. In a static language,
+updating the declared type signature and fixing any compile errors will catch
+most, if not all places that need updating.
 
 Static types can ease the mental burden of writing programs, by automatically
 tracking information the programmer would otherwise have to track mentally in
-some fashion. Example: you are writing a tricky function, and have two values in
-scope, f and x. The f you pulled out of a dictionary, the x was the result of
-calling foo(23). Is it safe to call f(x)? Types provide an automated, precise
-answer to this question.
+some fashion. \textbf{Example}: you are writing a tricky function, and have two
+values in scope, f and x. The f you pulled out of a dictionary, the x was the
+result of calling foo(23). Is it safe to call f(x)? Types provide an automated,
+precise answer to this question.
 
 Types serve as documentation for yourself and other programmers and provide a
 ‘gradient’ that tells you what terms make sense to write. For someone trained,
@@ -173,19 +182,19 @@ with shapes that we can observe fit together, we can think of types as
 specifying a grammar for programs that ‘make sense’. In dynamic languages (what
 Bob Harper somewhat trollishly refers to as ‘singly-typed’ languages),
 information about what programs make sense needs to be communicated in other
-ways. Example: many libraries have documentation with examples. Great. But if
+ways. \textbf{Example}: many libraries have documentation with examples. Great. But if
 one of the examples has the line read(message, peer), it’s often difficult to
 ascertain whether a related expression, like read(fileChunkStream(file1), peer),
 is also valid. Types provide immediate answers to these questions, especially
 for someone trained at reading typeful APIs.
 
 
-Benefits of static type checking and their alternatives, which implemented in thesis
-\cite{staticvsdynamic}
 \subsection{Disadvantages}
-something here
 
 Like any formalism, types require some investment up front to become fluent in.
+It is a small, but very important point since Clojure has a dynamic nature and
+good for rapid and live development and unnecessary formalism can radically
+decrease benefits of using such language.
 
 Type errors are frequently poor. Thus, even though errors are caught sooner, the
 way they are reported to the user can be frustratingly opaque, which isn’t good
@@ -212,7 +221,7 @@ encode things. For instance, you can create and use a nonempty list type and
 have the compiler check it statically or you can let nonemptiness be a dynamic
 property that you have to check for at runtime. You can have lazy, potentially
 infinite strings be a distinct type from strict, finite strings, or you can lump
-both concepts into the same type. And so on. In a static language, you do always
+both concepts into the same type and so on. In a static language, you do always
 have the option of building a less typeful API, where less is enforced by the
 types, but it is often tempting to spend more time encoding things statically
 (and then proving things to the typechecker) than would be saved by avoidance of
@@ -228,7 +237,19 @@ unsure how to decide, or when the choice feels distracting.
 
 \section{Optional annotations}
 What can be done prismatic.schema, clojure.spec
+
 \subsection{prismatic.schema}
+
+One of the difficulties with bringing Clojure into a team is the overhead of understanding the kind of data (e.g., list of strings, nested map from long to string to double) that a function expects and returns. While a full-blown type system is one solution to this problem, we present a lighter weight solution: schemas. (For more details on why we built Schema, check out this post.)
+
+Schema is a rich language for describing data shapes, with a variety of features:
+
+Data validation, with descriptive error messages of failures (targeted at programmers)
+Annotation of function arguments and return values, with optional runtime validation
+Schema-driven data coercion, which can automatically, succinctly, and safely convert complex data types (see the Coercion section below)
+Schema also supports experimental clojure.test.check data generation from Schemas, as well as completion of partial datums, features we've found very useful when writing tests. ** As of 1.1.0, this functionality can be found in the separate schema-generators library. **
+Schema is also built into our plumbing and fnhouse libraries, which illustrate how we build services and APIs easily and safely with Schema.
+
 \subsection{clojure.spec}
 Docs are not enough
 
