@@ -691,10 +691,7 @@ will have to wrap it in a call to spec, else it will be considered a nested
 pattern.
 
 
-
-
-
-\section{Gradual typing [DRAFT]}
+\section{Gradual typing}
 The popularity of dynamically-typed languages in software development, combined
 with a recognition that types often improve programmer productivity, software
 reliability, and performance, has led to the recent development of a wide
@@ -703,79 +700,113 @@ written in existing languages. These include TypeScript and Flow for JavaScript,
 Hack for PHP, and mypy for Python among the optional systems, and Typed Racket,
 Reticulated Python, and GradualTalk among gradually-typed systems.
 
-\subsection{TypedClojure}
-Something about typedclojure \cite{bonnaire2016practical}.
+One key lesson of these systems, indeed a lesson known to early developers of
+optional type systems such as StrongTalk, is that type systems for existing
+languages must be designed to work with the features and idioms of the target
+language. Often this takes the form of a core language, be it of functions or
+classes and objects, together with extensions to handle distinctive language
+features.
 
-% One key lesson of these systems, indeed a lesson known to early developers of
-% optional type systems such as StrongTalk, is that type systems for existing
-% languages must be designed to work with the features and idioms of the target
-% language. Often this takes the form of a core language, be it of functions or
-% classes and objects, together with extensions to handle distinctive language
-% features. We synthesize these lessons to present Typed Clojure, an optional type
-% system for Clojure. Clojure is a dynamically typed language in the Lisp
-% family—built on the Java Virtual Machine (JVM)—which has recently gained
-% popularity as an alternative JVM language. It offers the flexibility of a Lisp
-% dialect, including macros, emphasizes a functional style via immutable data
-% structures, and provides interoperability with existing Java code, allowing
-% programmers to use existing Java libraries without leaving Clojure. Since its
-% initial release in 2007, Clojure has been widely adopted for “backend”
-% development in places where its support for parallelism, functional programming,
-% and Lisp-influenced abstraction is desired on the JVM. As a result, there is an
-% extensive base of existing untyped programs whose developers can benefit from
-% Typed Clojure, an experience we discuss in this paper. Since Clojure is a
-% language in the Lisp family, we apply the lessons of Typed Racket, an existing
-% gradual type system for Racket, to the core of Typed Clojure, consisting of an
-% extended lambda-calculus over a variety of base types shared between all Lisp
-% systems. Furthermore, Typed Racket’s occurrence typing has proved necessary for
-% type checking realistic Clojure programs. However, Clojure goes beyond Racket in
-% many ways, requiring several new type system features which we detail in this
-% paper. Most significantly, Clojure supports, and Clojure developers use,
-% multimethods to structure their code in extensible fashion. Furthermore, since
-% Clojure is an untyped language, dispatch within multimethods is determined by
-% application of dynamic predicates to argument values. Fortunately, the dynamic
-% dispatch used by multimethods has surprising symmetry with the conditional
-% dispatch handled by occurrence typing. Typed Clojure is therefore able to
-% effectively handle complex and highly dynamic dispatch as present in existing
-% Clojure programs. But multimethods are not the only Clojure feature crucial to
-% type checking existing programs. As a language built on the Java Virtual
-% Machine, Clojure provides flexible and transparent access to existing Java
-% libraries, and Clojure/Java interoperation is found in almost every significant
-% Clojure code base. Typed Clojure therefore builds in an understanding of the
-% Java type system and handles interoperation appropriately. Notably, null is a
-% distinct type in Typed Clojure, designed to automatically rule out null-pointer
-% exceptions. An example of these features is given in Figure 1. Here, the pname
-% multimethod dispatches on the class of the argument—for Strings, the first
-% method implementation is called, for Files, the second. The String method calls
-% a File constructor, returning a non-nil File instance—the getName method on File
-% requires a non-nil target, returning a nilable type. Finally, flexible,
-% high-performance immutable dictionaries are the most common Clojure data
-% structure. Simply treating them as uniformly-typed key-value mappings would be
-% insufficient for existing programs and programming styles. Instead, Typed
-% Clojure provides a flexible heterogenous map type, in which specific entries can
-% be specified. While these features may seem disparate, they are unified in
-% important ways. First, they leverage the type system mechanisms inherited from
-% Typed Racket— multimethods when using dispatch via predicates, Java
-% interoperation for handling null tests, and heterogenous maps using union types
-% and reasoning about subcomponents of data. Second, they are crucial features for
-% handling Clojure code in practice. Typed Clojure’s use in real Clojure
-% deployments would not be possible without effective handling of these three
-% Clojure features. Our main contributions are as follows: 1. We motivate and
-% describe Typed Clojure, an optional type system for Clojure that understands
-% existing Clojure idioms. 2. We present a sound formal model for three crucial
-% type system features: multi-methods, Java interoperability, and heterogenous
-% maps. 3. We evaluate the use of Typed Clojure features on existing Typed Clojure
-% code, including both open source and in-house systems. The remainder of this
-% paper begins with an example-driven presentation of the main type system
-% features in Section 2. We then incrementally present a core calculus for Typed
-% Clojure covering all of these features together in Section 3 and prove type
-% soundness (Section 4). We then present an empirical analysis of significant code
-% bases written in core.typed—the full implementation of Typed Clojure—in Section
-% 5. Finally, we discuss related work and conclude.
+\subsection{TypedClojure}
+
+Typed Clojure is an optional type system for Clojure. It enables Clojure
+programmers to gain greater confidence in the correctness of their code via
+static type checking while remaining in the Clojure world, and has acquired
+significant adoption in the Clojure community. Typed Clojure repurposes Typed
+Racket’s occurrence typing, an approach to statically reasoning about predicate
+tests, and also includes several new type system features to handle existing
+Clojure idioms. There are three features widely used in Clojure. First,
+multimethods provide extensible operations, and their Clojure semantics turns
+out to have a surprising synergy with the underlying occurrence typing
+framework. Second, Java interoperability is central to Clojure’s mission but
+introduces challenges such as ubiquitous null; Typed Clojure handles Java
+interoperability while ensuring the absence of nullpointer exceptions in typed
+programs. Third, Clojure programmers idiomatically use immutable dictionaries
+for data structures; Typed Clojure handles this with multiple forms of
+heterogeneous dictionary types. Typed Clojure is now in use by numerous
+corporations and developers working with Clojure.
+
+Since Clojure is a language in the Lisp family, there was applied the lessons of
+Typed Racket, an existing gradual type system for Racket, to the core of Typed
+Clojure, consisting of an extended lambda-calculus over a variety of base types
+shared between all Lisp systems. Furthermore, Typed Racket’s occurrence typing
+has proved necessary for type checking realistic Clojure programs. However,
+Clojure goes beyond Racket in many ways, requiring several new type system
+features which we detail in this paper. Most significantly, Clojure supports,
+and Clojure developers use, multimethods to structure their code in extensible
+fashion. Furthermore, since Clojure is an untyped language, dispatch within
+multimethods is determined by application of dynamic predicates to argument
+values. Fortunately, the dynamic dispatch used by multimethods has surprising
+symmetry with the conditional dispatch handled by occurrence typing. Typed
+Clojure is therefore able to effectively handle complex and highly dynamic
+dispatch as present in existing Clojure programs. But multimethods are not the
+only Clojure feature crucial to type checking existing programs. As a language
+built on the Java Virtual Machine, Clojure provides flexible and transparent
+access to existing Java libraries, and Clojure/Java interoperation is found in
+almost every significant Clojure code base. Typed Clojure therefore builds in an
+understanding of the Java type system and handles interoperation appropriately.
+Notably, null is a distinct type in Typed Clojure, designed to automatically
+rule out null-pointer exceptions. An example of these features is given below:
+
+\begin{minted}{clojure}
+(ann pname [(U File String) -> (U nil String)])
+(defmulti pname class) ; multimethod dispatching on class of argument
+(defmethod pname String [s] (pname (new File s))) ; String case
+(defmethod pname File [f] (.getName f)) ; File case, static null check
+(pname "STAINS/JELLY") ;=> "JELLY" :- (U nil Str)
+\end{minted}
+
+Here, the pname multimethod dispatches on the class of the argument—for Strings,
+the first method implementation is called, for Files, the second. The String
+method calls a File constructor, returning a non-nil File instance—the getName
+method on File requires a non-nil target, returning a nilable type. Other
+examples and more detailed theoretical explanation can be found in
+\cite{bonnaire2016practical}.
+
+Finally, flexible, high-performance immutable dictionaries are the most common Clojure
+data structure. Simply treating them as uniformly-typed key-value mappings would
+be insufficient for existing programs and programming styles. Instead, Typed
+Clojure provides a flexible heterogenous map type, in which specific entries can
+be specified. While these features may seem disparate, they are unified in
+important ways. First, they leverage the type system mechanisms inherited from
+Typed Racket - multimethods when using dispatch via predicates, Java
+interoperation for handling null tests, and heterogenous maps using union types
+and reasoning about subcomponents of data. Second, they are crucial features for
+handling Clojure code in practice. Typed Clojure’s use in real Clojure
+deployments would not be possible without effective handling of these three
+Clojure features.
+
+After a 2 year trial, some companies \cite{clojuretypedescape} decided to
+disabled type checking. They were supportive of the fundamental ideas presented,
+but primarily cited issues with the checker implementation in practice and would
+reconsider type checking if they were resolved.
+
+\textbf{Performance.} Rechecking files with transitive dependencies is expensive
+since all dependencies must be rechecked. TypedClojure team conjecture caching
+type state will significantly improve re-checking performance, though preserving
+static soundness in the context of arbitrary code reloading is a largely
+unexplored area. Performance problems is a common for sound gradual typing
+\cite{takikawa2016sound}.
+
+\textbf{Library annotations.} Annotations for external code are rarely
+available, so a large part of the untyped-typed porting process is reverse
+engineering libraries.
+
+\textbf{Unsupported idioms.} While the current set of features is vital to
+checking Clojure code, there is still much work to do. For example, common
+Clojure functions are often too polymorphic for the current implementation or
+theory to account for.
+
+
 
 \subsection{Spectrum}
-Introducing Spectrum (github.com/arohner/spectrum), a static “typing”
-library that statically checks clojure code using standard clojure.spec
-annotations.
+Spectrum is another static analysis library. It is much younger than
+ClojureTyped and probably not ready for production use, but it based on
+clojure.spec, which will be included in next major release of Clojure
+programming language (1.9). It means that every project uses clojure.spec can
+get optional static type system almost for free and it doesn't have last two
+drawbacks of CoreTyped.
+
 
 %\section{Draft figures}
 
