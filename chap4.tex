@@ -1,68 +1,102 @@
 \chapter{Evaluation}
+
 \label{chap:evaluation}
 
+% \section{General}
+In previous chapter was introduced examples, which shows how to enrich
+documentation in IDE, how to sample data, generate tests and even do a static
+analysis, but nothing is giving for nothing, everything has a cost. There was a
+strict constraint about keeping old workflow and seamless integration of new
+tools.
 
-Now, for your reading pleasure, some \textsl{Lorem ipsum}, courtesy
-of:
-\begin{center}
-\texttt{<http://www.lipsum.com/>}
-\end{center}
-This gives a good view of the margins --- note that the left margin
-is a bit wider than the right margin to accommodate binding.
+From developers point of view changed not much. Most noticeable change that it
+is necessary to run static analysis tools, but it optional and can be done via
+version control system or continuous integration service and another important
+change that specs should be written for existing and future code. Other aspects
+as IDE performance or additional steps in workflow didn't significantly affected
+by new tools.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam odio elit,
-viverra eu tempor non, pulvinar ac nisi. Pellentesque habitant morbi
-tristique senectus et netus et malesuada fames ac turpis egestas. Sed
-adipiscing, dui quis viverra facilisis, quam libero adipiscing justo,
-vitae dictum libero mauris ac magna. Aenean sem ligula, vulputate at
-vestibulum eu, pellentesque in justo. Sed et eros mauris, sed placerat
-nulla. Maecenas nulla velit, facilisis et rutrum nec, volutpat id
-lorem. Duis vestibulum odio velit, id elementum tortor. Sed pellentesque
-leo ac nibh iaculis at fermentum orci lobortis. Suspendisse arcu magna,
-porta nec pretium non, feugiat vitae orci. Vivamus at enim arcu,
-at sagittis nisl. Vestibulum at mi enim, vel malesuada justo. Class
-aptent taciti sociosqu ad litora torquent per conubia nostra, per
-inceptos himenaeos. Nullam sed nunc at enim posuere sagittis. Vivamus
-augue turpis, mattis a blandit non, sollicitudin non nisl. Integer
-vestibulum, est vitae cursus adipiscing, elit libero pretium leo,
-in scelerisque augue felis volutpat nisl. Donec commodo posuere arcu,
-eget feugiat dui ornare nec. Nullam eros mi, condimentum ac ultricies ac,
-euismod lobortis nibh. Cras ac ligula pharetra risus elementum pharetra
-vel in quam. Fusce ac augue vulputate nibh imperdiet convallis sit amet
-et quam. Integer porttitor dictum fermentum.
+To understand how much additional code developers will write for utilizing power
+of optional annotations using clojure.spec Clojure core was analyzed. Using
+clojure reader specification \cite{readerspec} was created grammar for JavaCC.
+Source code provided in the Chapter \ref{chap:appendix}.
 
-Nullam id ante arcu. Nulla facilisi. Vestibulum sodales, mi sodales
-ultricies pulvinar, orci leo dictum diam, quis imperdiet turpis lacus
-ut sem. Nulla rutrum odio sit amet elit aliquam blandit gravida nunc
-placerat. Aenean et neque ut leo condimentum vehicula. Fusce quis orci
-vitae enim dapibus tincidunt in vel ipsum. Phasellus auctor neque ac eros
-egestas sit amet ultricies erat vestibulum. Ut erat ligula, pharetra
-vel hendrerit vitae, mattis ac turpis. Ut malesuada diam vitae lacus
-vestibulum a tempus nisl posuere. Ut nisi sem, dictum eu laoreet sed,
-commodo eget enim. Morbi vel lacus neque, tempus fringilla tellus. Nunc
-id egestas felis. Nullam eu mollis neque. Ut non mauris malesuada
-eros sagittis congue. Cras vitae felis ut nisl mollis semper ut quis
-risus. Sed eu arcu urna, et commodo sapien. Donec vestibulum, libero
-sit amet ultrices blandit, erat lorem volutpat lectus, sed feugiat leo
-elit in orci. Aliquam vitae leo tellus, placerat pulvinar massa. Nulla
-at sapien hendrerit diam varius vehicula.
+% \section{Amount of code}
 
-Curabitur et orci nulla. Phasellus euismod, massa non hendrerit dictum,
-dolor enim imperdiet sapien, vitae commodo lorem tellus eu quam. Duis
-egestas felis velit. Sed in orci nec nulla rutrum posuere. Suspendisse
-potenti. Nunc vel quam nisi. In at molestie libero. Aenean hendrerit
-vestibulum orci, ut hendrerit nulla volutpat lacinia. Vestibulum sit amet
-sapien vitae lectus gravida vehicula. Suspendisse ac purus sit amet est
-congue auctor.
+Java Compiler Compiler (JavaCC) is the most popular parser generator for use
+with Java applications. A parser generator is a tool that reads a grammar
+specification and converts it to a Java program that can recognize matches to
+the grammar. In addition to the parser generator itself, JavaCC provides other
+standard capabilities related to parser generation such as tree building (via a
+tool called JJTree included with JavaCC), actions, debugging, etc.
 
-Morbi pellentesque, quam vel mattis molestie, augue purus vestibulum
-lorem, nec consequat enim eros eu augue. In odio dolor, scelerisque
-a lobortis porttitor, commodo ut lacus. Maecenas sit amet diam
-nec tellus accumsan bibendum. Praesent in turpis velit, malesuada
-commodo sapien. Nunc ornare urna enim. Sed at diam non metus porttitor
-suscipit. Aliquam erat volutpat. Duis aliquet magna in mauris semper
-placerat. Ut eget quam orci. Ut egestas, dolor at dapibus accumsan, leo
-nibh egestas urna, ac consectetur dui odio quis eros. Nam libero dolor,
-lacinia eget imperdiet non, malesuada vehicula diam. Etiam id ipsum eget
-turpis consectetur tristique id at ante. Vivamus blandit nunc eu nisl
-varius sed accumsan odio molestie.
+This grammar with auxiliary functions inside it allows to generate parser, which
+can gather some metrics from source code. Using this parser two version of
+clojure core library (with and without specs) was compared. Clojure has no
+objects, classes, inheritance or variables and consist of S-expressions that is
+why it is impossible to compare code using standard metrics, therefore following
+metrics can be unusual for people not familiar with Lisp. Results and
+explanation provided below.
+
+\clearpage
+
+
+\begin{table}[]
+\centering
+\caption{Code decrease}
+\label{}
+\begin{tabular}{lrrr}
+                                                   & \multicolumn{1}{l}{}         & \multicolumn{1}{l}{}       & \multicolumn{1}{l}{}          \\ \cline{2-4}
+\multicolumn{1}{l|}{}                              & \multicolumn{1}{l|}{without} & \multicolumn{1}{l|}{with}  & \multicolumn{1}{l|}{decrease} \\ \cline{2-4}
+
+
+                                                   & \multicolumn{1}{l}{}         & \multicolumn{1}{l}{}       & \multicolumn{1}{l}{}          \\
+\multicolumn{4}{c}{Forms}                                                                                                                      \\ \hline
+\multicolumn{1}{|l|}{forms}                        & \multicolumn{1}{r|}{24266}   & \multicolumn{1}{r|}{25087} & \multicolumn{1}{r|}{0.0327}   \\ \hline
+\multicolumn{1}{|l|}{symbols}                      & \multicolumn{1}{r|}{14772}   & \multicolumn{1}{r|}{15068} & \multicolumn{1}{r|}{0.0196}   \\ \hline
+\multicolumn{1}{|l|}{literals}                     & \multicolumn{1}{r|}{3388}    & \multicolumn{1}{r|}{3692}  & \multicolumn{1}{r|}{0.0823}   \\ \hline
+\multicolumn{1}{|l|}{keywords}                     & \multicolumn{1}{r|}{1405}    & \multicolumn{1}{r|}{1705}  & \multicolumn{1}{r|}{0.1760}    \\ \hline
+\multicolumn{1}{|l|}{maximum form nestiness}       & \multicolumn{1}{r|}{17}      & \multicolumn{1}{r|}{17}    & \multicolumn{1}{r|}{0}        \\ \hline
+
+                                                   & \multicolumn{1}{l}{}         & \multicolumn{1}{l}{}       & \multicolumn{1}{l}{}          \\
+\multicolumn{4}{c}{Collections}                                                                                                                \\ \hline
+\multicolumn{1}{|l|}{lists}                        & \multicolumn{1}{r|}{6330}    & \multicolumn{1}{r|}{6525}  & \multicolumn{1}{r|}{0.0299}   \\ \hline
+\multicolumn{1}{|l|}{vectors}                      & \multicolumn{1}{r|}{1741}    & \multicolumn{1}{r|}{1748}  & \multicolumn{1}{r|}{0.0040}    \\ \hline
+\multicolumn{1}{|l|}{maps}                         & \multicolumn{1}{r|}{646}     & \multicolumn{1}{r|}{648}   & \multicolumn{1}{r|}{0.0030}    \\ \hline
+\multicolumn{1}{|l|}{sets}                         & \multicolumn{1}{r|}{39}      & \multicolumn{1}{r|}{58}    & \multicolumn{1}{r|}{0.3276}   \\ \hline
+
+
+                                                   & \multicolumn{1}{l}{}         & \multicolumn{1}{l}{}       & \multicolumn{1}{l}{}          \\
+\multicolumn{4}{c}{Definitions}                                                                                                                \\ \hline
+\multicolumn{1}{|l|}{public function defenitions}  & \multicolumn{1}{r|}{475}     & \multicolumn{1}{r|}{475}   & \multicolumn{1}{r|}{0}        \\ \hline
+\multicolumn{1}{|l|}{private function defenitions} & \multicolumn{1}{r|}{30}      & \multicolumn{1}{r|}{30}    & \multicolumn{1}{r|}{0}        \\ \hline
+\multicolumn{1}{|l|}{macro definitions}            & \multicolumn{1}{r|}{72}      & \multicolumn{1}{r|}{73}    & \multicolumn{1}{r|}{0.0137}   \\ \hline
+\multicolumn{1}{|l|}{multimethods defs}            & \multicolumn{1}{r|}{3}       & \multicolumn{1}{r|}{3}     & \multicolumn{1}{r|}{0}        \\ \hline
+\multicolumn{1}{|l|}{multimethods implementations} & \multicolumn{1}{r|}{2}       & \multicolumn{1}{r|}{2}     & \multicolumn{1}{r|}{0}        \\ \hline
+\end{tabular}
+\end{table}
+
+Lines of code is not the best metric to represent amount of code in Clojure,
+that is why another metric was used for those needs. It is a number of form. In
+Clojure code is a bunch of nested data structures, which contains some terminal
+tokens. Such terminals called symbols. Form is a symbol or data structure: list,
+map, vector, set. Other unusual metric is a maximum form nestiness, which
+represents deepest data structure in the code. Other metrics should be clear
+from there names.
+
+Columns are simple, first for metrics values of code without specs, second for
+values of code with specs and the last one for difference between annotated code
+and code without annotations calculated using formula: $(with - without)/with$.
+Statistics should be representative as it gathered from codebase of Clojure
+language core library.
+
+As definitions sections presents: code for spec doesn't add any function to the
+code, it only adds one macro probably to simplify some routine, one macro is not
+significant for our case. This result is predictable and just provide evidence
+that logic and structure of existing code doesn't changed.
+
+On the other hand amount of keywords are noticeably varies between two versions
+of the code. $17.6\%$ is a pretty big addition, but it is also expected.
+Clojure.spec strongly relies on keywords for registering specs. Overall codebase
+without annotations will be smaller only by $3.3\%$. It seems like a sane trade
+off for all features provided by this tools.

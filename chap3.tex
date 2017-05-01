@@ -382,7 +382,10 @@ continuous integration scripts. Usage is pretty simple.
 
 This check will provide error messages like classic compiler with location in
 the file and problem place, but it is not very suitable for live programming and
-just a good addition, which can be done for free if project already uses clojure.spec.
+just a good addition, which can be done for free if project already uses
+clojure.spec. Also, it is not so powerful as static analysis for languages with
+static type systems because specs are optional, but it probably not worse than
+other gradual type systems.
 
 \subsection{Automated test generation}
 First of all, to understand how function works in general and is it works at
