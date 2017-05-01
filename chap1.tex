@@ -54,28 +54,63 @@ system and it is necessary to use dynamically typed language? Can benefits of
 static type checking be achieved in such environment?
 
 
-\section{Contributions}
+\section{Objectives}
 In this thesis introduced few ways to get in dynamically typed language
 alternatives of benefits, which provides static type checking. As a basis
 \textbf{Clojure} programming language was taken, but most of the work should be
-suitable for languages, which have same properties described in Chapter
+suitable for languages, which have same or similar properties described in Chapter
 \ref{chap:background}.
 
 Initially, described benefits of static type checking and which of them are more
 in demand. After that explained ideas, which help to get similar benefits in
 dynamically typed language. Also, some of the existing tools and approaches,
-which implements this ideas are covered.
+which implements this ideas are explained.
 
-On top of that, the prototype of the tool, which helps to automate the process
-of generating tests and enriching documentation string in run-time is introduced
-as a big part of contribution of this thesis. This tool provides an interface
-(functions), which allows to modify meta-data of functions in run-time
-namespace-wide or project-wide and another interface (macros), which allows to
-generate test for annotated function in a single namespace.
+More precisely, following points covered:
+\begin{itemize}
+\item Better communication
+\item Improved developer experience
+\item More robust software
+\end{itemize}
 
-\section{Outline}
-Chapter \ref{chap:background} provides an overview of benefits, existing tools
-and possible alternatives
+Better communication means that dynamically typed languages has a lack of type
+annotations and it is hard to understand what functions consumes as parameters
+and what produces. As mentioned in \cite{janes2014lean} documentation often
+became outdated and useless, that is why solution must be part of codebase for
+more leverage and power and be up-to-date (actual for current codebase).
+
+Improved developer Experience means that it is static type system in some
+languages provides good and clean error messages and it is good to have tools,
+which helps to understand a problem and find its location quicker and with less
+effort. Moreover, it is important for hosted language to have tool, which
+provides consistent error messages across platforms instead of native stack
+traces.
+
+More robust software means that static type checking provides capabilities for
+static analysis, which helps to check kind of soundness between components.
+In dynamically typed languages it often hard to make static analysis of the
+system, but with gradual typing it is possible \cite{tobin2008design}. Another
+important tool for creation of robust software is tests and with type
+annotations it is possible to generate bunch of them automatically.
+
+This thesis work provides explanation how to achieve points mentioned above
+using some kind of optional annotations without breaking existing workflows
+(REPL-driven or/and test-driven development approaches), but it is important to
+understand that it is always necessary to do trade offs for each solution, that
+is why in Chapter \ref{chap:evaluation} provided an explanation of the cost of
+such solution.
+% On top of that, the example of the tool, which shows how to automate the process
+% of generating tests and enriching documentation string in run-time is introduced
+% as a part of contribution of this thesis. This tool provides an interface
+% (functions), which allows to modify meta-data of functions in run-time
+% namespace-wide or project-wide and another interface (macros), which allows to
+% generate test for annotated function in a single namespace.
+
+
+
+% \section{Outline}
+% Chapter \ref{chap:background} provides an overview of benefits, existing tools
+% and possible alternatives
 
 
 

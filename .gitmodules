@@ -1,0 +1,3 @@
+[submodule "javacc-clojure"]
+	path = javacc-clojure
+	url = git@github.com:abcdw/javacc-clojure.git
