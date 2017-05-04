@@ -3,31 +3,24 @@
 \textbf{\large Abstract}
 \end{center}
 
-This document provides information on how to workaround some drawbacks of
-dynamically typed languages. Lack of documentation about function parameters
-types. The need to write a lot of tests to check consistency of the project and
-integration between components. Implementation hardly rely on
-\textbf{clojure.spec} library.
+This thesis summarize and helps to understand, which advantages and
+disadvantages provides static type checking in contrast to dynamically typed
+languages. Most of figured out benefits are implemented using clojure.spec
+annotations and other related tools. Drawbacks of static type checking are
+reduced to minimum.
 
-First paragraph: state what the thesis is about, give a simple statement of aims and
-methods
+This benefits are important and not only Clojure developers care about them.
+Python type hints, TypedRacket, TypedClojure, TypeScripts, many other languages,
+gradual typing frameworks and related researchs shows that problems exist and
+deserve attention.
 
-Second paragraph: explain the structure of the thesis and say something about the
-content
+Clojure has a pretty smart community and unusual design decision behind language
+implementation. Due to rich ecosystems of hosted platforms (jvm, clr, js), very
+vibrant community, simplicity and extensibility of the language it is much
+easier to implement ideas for solving such problems. Code as data idioms
+significantly helps in this.
 
-Third paragraph: give a concluding statement, including a short summary of the
-results
-
-Additional information about writing abstract can be found here: \\
-% https://www.th-wildau.de/fileadmin/dokumente/studiengaenge/europaeisches_management/dokumente/Dokumente_EM_Ba/Abstracts_in_English.pdf
-
-\vspace{1cm}
-
-% \emph{``The purpose of the abstract, which should not exceed 150 words for
-% a Masters' thesis or 350 words for a Doctoral thesis, is to provide
-% sufficient information to allow potential readers to decide on relevance
-% of the thesis. Abstracts listed in Dissertation Abstracts International
-% or Masters' Abstracts International should contain appropriate key
-% words and phrases designed to assist electronic searches.''}
-
-\hfill --- MUN School of Graduate Studies
+Most of benifits borrowed from static world is achivied for pretty sane cost.
+Static analysis tools are not mature and not natural for dynamic languages. Now,
+it is hard to say how this technologies and techniques will be adopted in
+industry, but they looks promising.

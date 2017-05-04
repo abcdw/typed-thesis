@@ -1,3 +1,61 @@
 \chapter{Conclusions}
 \label{chap:conclusions}
-That's all folks!
+
+In Chapter \ref{chap:background} introduced basic information about Clojure
+language and general ideas of workflows for developers, who uses dynamically typed
+languages, which supports interactive development. Most important factor
+influenced decisions are stated below:
+
+\begin{itemize}
+\item Data Immutability
+\item JVM/CLR/JS interopability
+\item Lisp origin
+\item REPL/TDD-driven development
+\end{itemize}
+
+Points above force solution not to break existing workflow and codebase, keep
+feedback cycle short and be platform independent. After that was conducted from
+different researches and highlighted pros and cons of static type checking with
+examples. Advantages was generalized into list of three items, which was
+implemented. Disadvantages was formulated to escape them. Also, existing tools
+was extensively described to provide understanding why some of them chosen for
+implementation. Chapter \ref{chap:implementation} explains why this points are
+important and how to achieve them:
+
+\begin{itemize}
+\item Improved developer experience
+\item Better communication
+\item More robust software
+\end{itemize}
+
+Improved developer experience consist of three subsections: First is
+destructuring and it contains descriptions how to convert shape of data using
+specifications without creation of complex parser. Second is Better error
+messages and it is about optional annotations can help understand location of
+the problem and problem itself, moreover to get consistent experience between
+platforms. Last one is sampling data explains how to use existing definitions of
+data shapes to generate sample data objects, conforming those shapes.
+
+Better communication section about understanding of existing code, interface
+provided by it and documentation. It states that it is much better to generate
+documentation from specs than try to maintain documentation. Specs provides many
+capabilities (not only documentation generation) and tightly integrated in code
+that is why they up-to-date in most cases in contrast to the documentation.
+
+Section about robustness of software covers two main point. First is a static
+analysis, which means that you can achieve most features of static world, but it
+doesn't fit well in existing workflows. Second one is about automated software
+testing, which describes generation of tests for annotated function without
+significant effort.
+
+Evaluation chapter explains trade offs, which must be accepted to get benefits
+from Implementation chapter. Specs are not used for compilation and doesn't
+affect production code because they are used in most cases only in development
+environment, therefore performance neither increased, nor decreased. Size of the
+code with annotations isn't significantly bigger than without it. $3.3\%$ is a
+good value for that.
+
+Summing up, most of benifits is achivied for pretty sane cost. Static analysis
+tools are not mature and not natural for dynamic languages. Now, it is hard to
+say how this technologies and techniques will be adopted in industry, but they
+looks promising.

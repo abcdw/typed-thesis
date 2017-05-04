@@ -1,0 +1,18 @@
+| FORMS                        | without |  with | increase |
+| forms                        |   24266 | 25087 |   0.0327 |
+| symbols                      |   14772 | 15068 |   0.0196 |
+| literals                     |    3388 |  3692 |   0.0823 |
+| keywords                     |    1405 |  1705 |    0.176 |
+| maximum form nestiness       |      17 |    17 |        0 |
+| COLLECTIONS                  |         |       |          |
+| lists                        |    6330 |  6525 |   0.0299 |
+| vectors                      |    1741 |  1748 |    0.004 |
+| maps                         |     646 |   648 |    0.003 |
+| sets                         |      39 |    58 |   0.3276 |
+| DEFINITIONS                  |         |       |          |
+| public function defenitions  |     475 |   475 |        0 |
+| private function defenitions |      30 |    30 |        0 |
+| macro definitions            |      72 |    73 |   0.0137 |
+| multimethods defs            |       3 |     3 |        0 |
+| multimethods implementations |       2 |     2 |        0 |
+#+TBLFM: $4=round((1-$2/$3) * 10000)/10000

@@ -375,7 +375,11 @@ Examples below explains most features of prismatic.schema.
 ;; On JS, you can use prototype functions
 (s/validate Element (js/document.getElementById "some-div-id"))
 \end{minted}
-
+Such features are common for such libraries, similar things can be achieved
+using clojure.spec or herbert, but prismatic.schema was first library with huge
+adoption. Many other libraries(swagger api, liberator, etc) relies on schema,
+but probably in recent future such libraries became less popular, because
+developers of Clojure will bring standard for such needs called clojure.spec.
 
 \subsection{clojure.spec}
 
