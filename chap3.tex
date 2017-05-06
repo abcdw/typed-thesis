@@ -12,7 +12,7 @@ In Chapter \ref{chap:background} was discussed three main things:
 
 Let's clarify what tools will be used and what we would like to achieve using
 them. It necessary to keep in mind that trade offs should be sufficient, for
-example feedback cycle must remain short and existing workflow shouldn't be
+example feedback cycle must remain short and existing workflow should not be
 broken.
 
 First tool is clojure.spec. As mentioned in Chapter \ref{chap:background} it has
@@ -220,7 +220,7 @@ In world of programming it is very hard to give names to functions and
 variables, but it also hard to come up with values for test, examples and so on,
 but if we know type or even more complex predicate about data, why developers
 should create sample data structures and fill them with values by hands?
-Actually they don't, it is very easy to generate them from specs.
+Actually they do not, it is very easy to generate them from specs.
 
 \begin{minted}{clojure}
 (s/exercise ::num)
@@ -284,13 +284,13 @@ their own old code, but for languages such Clojure or Python it is not obvious,
 which functions accepts which values (types of values). Such information can be
 placed in docstring, but the problem is that documentation is hard to maintain,
 it can vary in quality, became outdated or even contradictory and it means that
-it doesn't linked with code. Much better, when there are something built in
+it does not linked with code. Much better, when there are something built in
 language like type annotations, right? Clojure.spec is enough for this needs.
 
 \includegraphics[width=\textwidth]{withoutspec}
 % \subsection{Explanation}
 
-Looking at documentation of function in dynamically typed language often doesn't
+Looking at documentation of function in dynamically typed language often does not
 provide enough information and it is necessary to look at the source code, but
 it is very time-consuming, especially when you need very small amount of
 information about particular function.
@@ -353,7 +353,7 @@ simplified for thesis needs, but idea behind it is still actual.
 \end{minted}
 
 
-Initially, this code didn't have specs and someone used to come up with
+Initially, this code did not have specs and someone used to come up with
 question: What user-type is? After few similar questions
 \texttt{credentials} map was created. It keys is a what we call user-type and
 keys is a credentials of test users, which have this particular type. Now
@@ -428,7 +428,7 @@ data on each test execution. Do it using spec.test pretty easy:
 
 To avoid flacky tests some constant seed for generators can be used, other can
 be changed as well. It is like previous example, but with checking if return
-value conforms the spec, in case it doesn't this code throws an exception. It is
+value conforms the spec, in case it does not this code throws an exception. It is
 already a solution, but not very good. Let's improve it. Also, we know that real
 tokens is a string, which starts with ``Token '' prefix, that is why we also
 change \texttt{::token-map} definition.
