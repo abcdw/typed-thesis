@@ -7,14 +7,12 @@ In previous chapter was introduced examples, which shows how to enrich
 documentation in IDE, how to sample data, generate tests and even do a static
 analysis, but nothing is giving for nothing, everything has a cost. There was a
 strict constraint about keeping old workflow and seamless integration of new
-tools.
-
-From developers point of view changed not much. Most noticeable change that it
-is necessary to run static analysis tools, but it optional and can be done via
-version control system or continuous integration service and another important
-change that specs should be written for existing and future code. Other aspects
-as IDE performance or additional steps in workflow did not significantly affected
-by new tools.
+tools. From developers point of view changed not much. Most noticeable change
+that it is necessary to run static analysis tools, but it optional and can be
+done via version control system or continuous integration service and another
+important change that specs should be written for existing and future code.
+Other aspects as IDE performance or additional steps in workflow did not
+significantly affected by new tools.
 
 To understand how much additional code developers will write for utilizing power
 of optional annotations using clojure.spec Clojure core was analyzed. Using
@@ -38,7 +36,32 @@ why it is impossible to compare code using standard metrics, therefore following
 metrics can be unusual for people not familiar with Lisp. Results and
 explanation provided below.
 
-\clearpage
+
+
+Lines of code is not the best metric to represent size of code in Clojure,
+that is why another metric was used for those needs. It is a number of form. In
+Clojure code is a bunch of nested data structures, which contains some terminal
+tokens. Such terminals called symbols. Form is a symbol or data structure: list,
+map, vector, set. Other unusual metric is a maximum form nestiness, which
+represents deepest data structure in the code. Other metrics should be clear
+from there names.
+
+Columns are simple, first for metrics values of code without specs, second for
+values of code with specs and the last one for difference between annotated code
+and code without annotations calculated using formula: $(with - without)/with$.
+Statistics should be representative as it gathered from codebase of Clojure
+language core library.
+
+As definitions sections presents: code for spec does not add any function to the
+code, it only adds one macro probably to simplify some routine, one macro is not
+significant for our case. This result is predictable and just provide evidence
+that logic and structure of existing code does not changed.
+
+On the other hand amount of keywords are noticeably varies between two versions
+of the code. $17.6\%$ is a pretty big addition, but it is also expected.
+Clojure.spec strongly relies on keywords for registering specs. Overall codebase
+without annotations will be smaller only by $3.3\%$. It seems like a sane trade
+off for all features provided by this tools.
 
 
 \begin{table}[]
@@ -75,28 +98,3 @@ explanation provided below.
 \multicolumn{1}{|l|}{multimethods implementations} & \multicolumn{1}{r|}{2}       & \multicolumn{1}{r|}{2}     & \multicolumn{1}{r|}{0}        \\ \hline
 \end{tabular}
 \end{table}
-
-Lines of code is not the best metric to represent size of code in Clojure,
-that is why another metric was used for those needs. It is a number of form. In
-Clojure code is a bunch of nested data structures, which contains some terminal
-tokens. Such terminals called symbols. Form is a symbol or data structure: list,
-map, vector, set. Other unusual metric is a maximum form nestiness, which
-represents deepest data structure in the code. Other metrics should be clear
-from there names.
-
-Columns are simple, first for metrics values of code without specs, second for
-values of code with specs and the last one for difference between annotated code
-and code without annotations calculated using formula: $(with - without)/with$.
-Statistics should be representative as it gathered from codebase of Clojure
-language core library.
-
-As definitions sections presents: code for spec does not add any function to the
-code, it only adds one macro probably to simplify some routine, one macro is not
-significant for our case. This result is predictable and just provide evidence
-that logic and structure of existing code does not changed.
-
-On the other hand amount of keywords are noticeably varies between two versions
-of the code. $17.6\%$ is a pretty big addition, but it is also expected.
-Clojure.spec strongly relies on keywords for registering specs. Overall codebase
-without annotations will be smaller only by $3.3\%$. It seems like a sane trade
-off for all features provided by this tools.
