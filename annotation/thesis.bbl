@@ -1,0 +1,122 @@
+\begin{thebibliography}{10}
+
+\bibitem{beck2003test}
+K.~Beck.
+\newblock {\em Test-driven development: by example}.
+\newblock Addison-Wesley Professional, 2003.
+
+\bibitem{bonnaire2016practical}
+A.~Bonnaire-Sergeant, R.~Davies, and S.~Tobin-Hochstadt.
+\newblock Practical optional types for clojure.
+\newblock In {\em European Symposium on Programming Languages and Systems},
+  pages 68--94. Springer, 2016.
+
+\bibitem{chang2011impact}
+M.~Chang, B.~Mathiske, E.~Smith, A.~Chaudhuri, A.~Gal, M.~Bebenita, C.~Wimmer,
+  and M.~Franz.
+\newblock The impact of optional type information on jit compilation of
+  dynamically typed languages.
+\newblock In {\em ACM SIGPLAN Notices}, volume~47, pages 13--24. ACM, 2011.
+
+\bibitem{staticvsdynamic}
+P.~Chiusano.
+\newblock The advantages of static typing, simply stated.
+\newblock https://pchiusano.github.io/2016-09-15/static-vs-dynamic.html/, 2016.
+\newblock Accessed: 2017-04-05.
+
+\bibitem{fogus2011joy}
+M.~Fogus and C.~Houser.
+\newblock {\em The joy of Clojure}.
+\newblock Manning, 2011.
+
+\bibitem{halloway2009programming}
+S.~Halloway.
+\newblock {\em Programming Clojure}.
+\newblock Pragmatic Bookshelf, 2009.
+
+\bibitem{hickey2008clojure}
+R.~Hickey.
+\newblock The clojure programming language.
+\newblock In {\em Proceedings of the 2008 symposium on Dynamic languages},
+  page~1. ACM, 2008.
+
+\bibitem{readerspec}
+R.~Hickey.
+\newblock The reader.
+\newblock https://clojure.org/reference/reader, 2017.
+\newblock Accessed: 2017-04-05.
+
+\bibitem{janes2014lean}
+A.~Janes and G.~Succi.
+\newblock Lean software development in action.
+\newblock In {\em Lean Software Development in Action}, pages 249--354.
+  Springer, 2014.
+
+\bibitem{lymanmuch}
+P.~Lyman, H.~R. Varian, P.~Charles, N.~Good, L.~L. Jordan, and J.~Pal.
+\newblock How much information? 2003. research project report, uc berkeley
+  school of information management and systems (october 2003).
+
+\bibitem{staticbroken}
+D.~R. Maclver.
+\newblock Static typing will not save us from broken software.
+\newblock
+  http://www.drmaciver.com/2016/10/static-typing-will-not-save-us-from-broken-software/,
+  2016.
+\newblock Accessed: 2017-04-05.
+
+\bibitem{madeyski2007impact}
+L.~Madeyski and {\L}.~Sza{\l}a.
+\newblock The impact of test-driven development on software development
+  productivity—an empirical study.
+\newblock In {\em European Conference on Software Process Improvement}, pages
+  200--211. Springer, 2007.
+
+\bibitem{meijer2004static}
+E.~Meijer and P.~Drayton.
+\newblock Static typing where possible, dynamic typing when needed: The end of
+  the cold war between programming languages.
+\newblock In {\em Static typing where possible, dynamic typing when needed: The
+  end of the cold war between programming languages}, 2004.
+
+\bibitem{meyer2007contract}
+B.~Meyer.
+\newblock Contract-driven development.
+\newblock In {\em International Conference on Fundamental Approaches to
+  Software Engineering}, pages 11--11. Springer, 2007.
+
+\bibitem{nanz2015comparative}
+S.~Nanz and C.~A. Furia.
+\newblock A comparative study of programming languages in rosetta code.
+\newblock In {\em Software Engineering (ICSE), 2015 IEEE/ACM 37th IEEE
+  International Conference on}, volume~1, pages 778--788. IEEE, 2015.
+
+\bibitem{clojuretypedescape}
+M.~O'Morain.
+\newblock Why we're no longer using core.typed.
+\newblock https://circleci.com/blog/why-were-no-longer-using-core-typed/, 2015.
+\newblock Accessed: 2017-04-05.
+
+\bibitem{specific}
+B.~Rady.
+\newblock Specific.
+\newblock https://github.com/benrady/specific, 2016.
+\newblock Accessed: 2017-04-05.
+
+\bibitem{takikawa2016sound}
+A.~Takikawa, D.~Feltey, B.~Greenman, M.~S. New, J.~Vitek, and M.~Felleisen.
+\newblock Is sound gradual typing dead?
+\newblock In {\em ACM SIGPLAN Notices}, volume~51, pages 456--468. ACM, 2016.
+
+\bibitem{tanimoto2013perspective}
+S.~L. Tanimoto.
+\newblock A perspective on the evolution of live programming.
+\newblock In {\em Live Programming (LIVE), 2013 1st International Workshop on},
+  pages 31--34. IEEE, 2013.
+
+\bibitem{tobin2008design}
+S.~Tobin-Hochstadt and M.~Felleisen.
+\newblock The design and implementation of typed scheme.
+\newblock {\em ACM SIGPLAN Notices}, 43(1):395--406, 2008.
+
+\end{thebibliography}
