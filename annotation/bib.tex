@@ -1,0 +1,101 @@
+\documentclass[a4paper,14pt]{extreport}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+% \usepackage[dvips]{graphicx}
+\usepackage[pdftex]{graphicx}
+\usepackage{geometry}
+\geometry{left=25mm}
+\geometry{right=20mm}
+\geometry{top=20mm}
+\geometry{bottom=20mm}
+\graphicspath{{image/}}
+\usepackage[usenames]{color}
+\usepackage{colortbl}
+\usepackage{multirow}
+\usepackage{amssymb,amsfonts,amsmath,mathtext,cite,enumerate,float}
+\usepackage{setspace}
+\onehalfspacing
+
+
+\begin{document}
+\begin{titlepage}
+\begin{table}[]
+    \centering
+    \begin{tabular}{rcl}
+    Автономная некоммерческая &
+    \multirow{4}{*}{\includegraphics[width=40mm]{image/logo.eps}}
+          & Autonomous noncommercial \\
+    организация высшего  & & organization of higher \\
+    образования & & education \\
+    «Университет Иннополис»  &
+     & «Innopolis University» \\
+    \hline
+    \hline
+    \end{tabular}
+    \label{tab:my_label}
+\end{table}
+\vline
+\vspace{20mm}
+
+\begin{center}
+\textbf{АННОТАЦИЯ \\ НА ВЫПУСКНУЮ КВАЛИФИКАЦИОННУЮ РАБОТУ  \\
+ПО НАПРАВЛЕНИЮ ПОДГОТОВКИ \\ 09.03.01 --- «ИНФОРМАТИКА И ВЫЧИСЛИТЕЛЬНАЯ ТЕХНИКА»}
+\end{center}
+\vspace{20mm}
+
+
+    \begin{tabular}{ll
+|>{\columncolor[gray]{.9}}l|}
+\cline{3-3}
+\textbf{Тема:} &
+     &
+    \makebox[133mm][l]{Указывается тема работы}    \\
+    &&\\
+    && \\
+    &&  \\
+\cline{3-3}
+    \end{tabular}
+\vspace{5mm}
+
+
+    \begin{tabular}{ll
+|>{\columncolor[gray]{.9}}l|l
+|>{\columncolor[gray]{.9}}l|}
+\cline{3-3} \cline{5-5}
+Выполнил &
+     &
+    \makebox[77mm][l]{Иванов Иван Иванович}   &
+    &    \\
+    &&&&
+    \makebox[39.5mm]{\textcolor[gray]{.7}{подпись}} \\
+    &&&& \\
+    \cline{3-3} \cline{5-5}
+    \end{tabular}
+\vspace{5mm}
+
+\vspace{\fill}
+
+\begin{center}
+Иннополис, 2017
+\end{center}
+\end{titlepage}
+
+
+\newpage
+\noindent \large \textbf{Содержание} \\
+\input{thesis.toc}
+
+\newpage
+\noindent \large \textbf{Введение}
+
+\newpage
+\noindent \large \textbf{Краткое описание основной части диссертации}
+
+\newpage
+\noindent \large \textbf{Заключение}
+
+\newpage
+\noindent \large \textbf{Список использованной литературы}
+
+
+\end{document}

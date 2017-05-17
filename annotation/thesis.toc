@@ -1,0 +1,33 @@
+% \select@language {english}
+\contentsline {chapter}{Реферат}{i}
+\contentsline {chapter}{Список таблиц}{iv}
+\contentsline {chapter}{\numberline {1}Введение}{1}
+\contentsline {section}{\numberline {1.1}Краткое описание}{1}
+\contentsline {section}{\numberline {1.2}Цели}{3}
+\contentsline {section}{\numberline {1.3}Структура}{4}
+\contentsline {chapter}{\numberline {2}Теоретические основы}{5}
+\contentsline {section}{\numberline {2.1}Особенности языка Clojure}{5}
+\contentsline {section}{\numberline {2.2}Интерактивная разработка}{7}
+\contentsline {section}{\numberline {2.3}Статическая типизация}{9}
+\contentsline {subsection}{\numberline {2.3.1}Преимущества}{9}
+\contentsline {subsection}{\numberline {2.3.2}Недостатки}{11}
+\contentsline {section}{\numberline {2.4}Опциональные аннотации}{12}
+\contentsline {subsection}{\numberline {2.4.1}prismatic.schema}{14}
+\contentsline {subsection}{\numberline {2.4.2}clojure.spec}{17}
+\contentsline {section}{\numberline {2.5}Постепенная типизация}{26}
+\contentsline {subsection}{\numberline {2.5.1}TypedClojure}{26}
+\contentsline {subsection}{\numberline {2.5.2}Spectrum}{29}
+\contentsline {chapter}{\numberline {3}Практическая часть}{30}
+\contentsline {section}{\numberline {3.1}Задачи}{30}
+\contentsline {section}{\numberline {3.2}Облегчённый процесс разработки}{32}
+\contentsline {subsection}{\numberline {3.2.1}Деструктурирование}{32}
+\contentsline {subsection}{\numberline {3.2.2}Улчшенные отчёты об ошибках}{34}
+\contentsline {subsection}{\numberline {3.2.3}Генерация образцовых данных}{36}
+\contentsline {section}{\numberline {3.3}Улучшенное взаимодействие}{38}
+\contentsline {section}{\numberline {3.4}Более качественное ПО}{40}
+\contentsline {subsection}{\numberline {3.4.1}Статический анализ}{41}
+\contentsline {subsection}{\numberline {3.4.2}Автоматическая генерация тестов}{42}
+\contentsline {chapter}{\numberline {4}Анализ результатов}{46}
+\contentsline {chapter}{\numberline {5}Заключение}{49}
+\contentsline {chapter}{Список литературы}{52}
+\contentsline {chapter}{\numberline {A}Приложение}{55}
